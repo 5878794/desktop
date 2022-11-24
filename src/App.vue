@@ -1,17 +1,25 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <desktop/>
+  <web-test/>
+  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
 </template>
 
-<script>
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component'
 import HelloWorld from './components/HelloWorld.vue'
+import desktop from './components/desktop/desktop'
+import test from './components/desktop/test1'
 
-export default {
-  name: 'App',
+customElements.define('web-test', test)
+
+@Options({
   components: {
-    HelloWorld
+    HelloWorld,
+    desktop
   }
-}
+})
+export default class App extends Vue {}
 </script>
 
 <style>
