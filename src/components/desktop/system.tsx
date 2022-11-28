@@ -17,7 +17,7 @@ export default defineComponent({
         return <>
             <div class={[boxStyle.box_hlc, boxStyle.boxflex1]}>
                 <left/>
-                <app-name icon='./favicon.ico' name='测试app'/>
+                <app-name icon='#icon-more' name='测试app'/>
             </div>
             <systemTime/>
             <right/>

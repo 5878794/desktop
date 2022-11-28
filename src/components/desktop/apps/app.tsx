@@ -3,12 +3,14 @@
 import {defineComponent, ref} from "vue";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
 import boxStyle from "@/components/desktop/css/box.module.scss";
+import icon from '@/components/desktop/publishCom/icon';
 
 //cache
 import {getAppInfo, openWin} from "@/components/desktop/cache/data";
 
 
 export default defineComponent({
+    components: {icon},
     props: {
         id: {type: String, default: ''},
     },
@@ -52,7 +54,7 @@ export default defineComponent({
                 onMouseleave={this.mouseleaveFn}
                 class={[desktopStyle.app, boxStyle.box_hcc]}
             >
-                <img src={this.appInfo.icon}/>
+                <icon src={this.appInfo.icon}/>
                 <div
                     style={`display:${this.display};opacity:${this.opacity}`}
                     class={desktopStyle.left_icon_text}

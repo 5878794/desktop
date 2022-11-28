@@ -1,7 +1,8 @@
 import {ref} from "vue";
 
 const systemApp = [
-    {id: 'more', name: '所有应用', icon: '', com: ''}
+    //icon为 iconfont的class图标
+    {id: 'more', name: '所有应用', icon: '#icon-more-grid-big', com: ''}
 ];
 
 const openedWin: any = ref([]);

@@ -3,8 +3,10 @@ import {defineComponent} from "vue";
 import boxStyle from '../css/box.module.scss';
 import desktopStyle from '../css/index.module.scss';
 import powerPng from '@/assets/power.png'
+import icon from "@/components/desktop/publishCom/icon";
 
 export default defineComponent({
+    components: {icon},
     setup(props, {expose}) {
         const clickFn = () => {
             //TODO
@@ -22,7 +24,8 @@ export default defineComponent({
                 onClick={this.clickFn}
                 class={[boxStyle.box_hrc, boxStyle.boxflex1, desktopStyle.right]}
             >
-                <img src={powerPng}/>
+                <icon src='#icon-dianyuan'/>
+                {/*<img src={powerPng}/>*/}
             </div>
         </>
     }

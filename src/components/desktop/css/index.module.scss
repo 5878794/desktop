@@ -40,6 +40,12 @@
       margin-right: 10px;
     }
 
+    :global(.iconfont) {
+      color: #fff;
+      font-size: 12px;
+      margin-right: 10px;
+    }
+
     &:hover {
       background: rgba(255, 255, 255, .3);
     }
@@ -50,19 +56,24 @@
   }
 
   .right {
-    img {
-      display: inline-block;
-      width: 34px;
-      height: 14px;
-      margin-right: 5px;
-      cursor: default;
-      padding: 0 10px;
-      border-radius: 14px;
+    :global {
+      .iconfont {
+        display: inline-block;
+        width: 34px;
+        height: 16px;
+        margin-right: 5px;
+        cursor: default;
+        padding: 0 10px;
+        border-radius: 14px;
+        color: #fff;
+        font-size: 16px;
+
+        &:hover {
+          background: rgba(255, 255, 255, .3);
+        }
+      }
     }
 
-    &:hover img {
-      background: rgba(255, 255, 255, .3);
-    }
 
   }
 }
@@ -97,6 +108,14 @@
       height: 46px;
       border-radius: 5px;
     }
+
+    :global {
+      .iconfont {
+        color: #fff;
+        font-size: 36px;
+      }
+    }
+
 
     .left_icon_text {
       position: absolute;
