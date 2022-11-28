@@ -4,7 +4,8 @@ import app from './apps/app'
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
 import morePng from "@/assets/more.png";
-import {appList} from "@/components/desktop/cache";
+
+import {appList} from "@/components/desktop/cache/data";
 
 export default defineComponent({
     components: {app},
@@ -16,16 +17,14 @@ export default defineComponent({
             <div class={[boxStyle.box_sct, desktopStyle.apps]}>
                 <div class={[boxStyle.boxflex1]}>
                     {
-                        appList.map((item: any) => {
+                        appList.value.map((item: any) => {
                             return <app
-                                name={item.name}
-                                icon={item.icon}
                                 id={item.id}
                             />
                         })
                     }
                 </div>
-                <app id='more' name='显示应用程序' icon={morePng}/>
+                <app id='more' name='所有应用程序' icon={morePng}/>
             </div>
         </>
     }

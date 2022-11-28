@@ -4,17 +4,19 @@ import {defineComponent, ref} from "vue";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
 import boxStyle from "@/components/desktop/css/box.module.scss";
 
+//cache
+import {getAppInfo, openWin} from "@/components/desktop/cache/data";
+
 
 export default defineComponent({
     props: {
-        name: {type: String, default: ''},
-        icon: {type: String, default: ''},
-        id: {type: String, default: ''}
+        id: {type: String, default: ''},
     },
     setup(props, {expose}) {
+        const appInfo = getAppInfo(props.id);
+
         const clickFn = () => {
-            //TODO
-            console.log('app click')
+            openWin(props.id);
         }
 
         const display = ref('none');
@@ -33,6 +35,7 @@ export default defineComponent({
         expose({});
 
         return {
+            appInfo,
             clickFn,
             mouseEnterFn,
             mouseleaveFn,
@@ -41,19 +44,26 @@ export default defineComponent({
         }
     },
     render() {
-        return <>
-            <div
+        const createApp = () => {
+            return <div
                 onClick={this.clickFn}
                 onMouseenter={this.mouseEnterFn}
                 onMouseleave={this.mouseleaveFn}
                 class={[desktopStyle.app, boxStyle.box_hcc]}
             >
-                <img src={this.icon}/>
+                <img src={this.appInfo.icon}/>
                 <div
                     style={`display:${this.display};opacity:${this.opacity}`}
                     class={desktopStyle.left_icon_text}
-                >{this.name}</div>
+                >{this.appInfo.name}</div>
             </div>
-        </>
+        }
+
+
+        if (this.appInfo) {
+            return createApp()
+        } else {
+            return null;
+        }
     }
 })

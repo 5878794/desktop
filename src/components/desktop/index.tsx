@@ -7,6 +7,11 @@ import desktop from "@/components/desktop/desktop";
 import boxStyle from './css/box.module.scss';
 import desktopStyle from './css/index.module.scss';
 
+//data
+import {appList} from './setting';
+import {registerApp} from './cache/data';
+
+registerApp(appList);
 
 export default defineComponent({
     components: {
