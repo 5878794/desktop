@@ -6,3 +6,4 @@ declare module '*.vue' {
 }
 
 declare module '*.module.scss';
+declare module "*.png"

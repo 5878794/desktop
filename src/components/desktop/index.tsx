@@ -21,11 +21,9 @@ export default defineComponent({
                 {/*顶部系统条*/}
                 <system/>
             </div>
-            <div class={[boxStyle.boxflex1, boxStyle.box_hlt]} style='width:100%;'>
-                <div class={[boxStyle.box_stc, desktopStyle.apps]}>
-                    {/*左侧app列表*/}
-                    <apps/>
-                </div>
+            <div class={[boxStyle.boxflex1, boxStyle.box_hlt, desktopStyle.content]}>
+                {/*左侧app列表*/}
+                <apps/>
                 <div class={[boxStyle.boxflex1, desktopStyle.desktop]}>
                     {/*桌面区域*/}
                     <desktop/>

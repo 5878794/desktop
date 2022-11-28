@@ -6,7 +6,7 @@ import systemTime from '@/components/desktop/system/time';
 import right from '@/components/desktop/system/right';
 //css
 import boxStyle from './css/box.module.scss';
-import desktopStyle from './css/index.module.scss';
+// import desktopStyle from './css/index.module.scss';
 
 export default defineComponent({
     components: {left, appName, systemTime, right},

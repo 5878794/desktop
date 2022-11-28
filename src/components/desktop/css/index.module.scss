@@ -67,13 +67,61 @@
   }
 }
 
+.content {
+  width: 100%;
+  position: relative;
+}
+
 .apps {
   width: 60px;
   height: 100%;
-  background: green;
+  background: rgba(0, 0, 0, .6);
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+
+  .app {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    cursor: default;
+    position: relative;
+
+    &:hover {
+      background: rgba(255, 255, 255, .3);
+    }
+
+    img {
+      width: 46px;
+      height: 46px;
+      border-radius: 5px;
+    }
+
+    .left_icon_text {
+      position: absolute;
+      left: 101%;
+      top: 50%;
+      color: #fff;
+      background: #000;
+      padding: 5px 10px;
+      height: 24px;
+      margin-top: -12px;
+      line-height: 12px;
+      border-radius: 10px;
+      border: 1px solid #666;
+      transition: all 0.4s ease-out;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+  }
 }
+
 
 .desktop {
   height: 100%;
-  background: antiquewhite;
+  background-image: url('/src/assets/bg.png');
+  background-size: 100% 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
