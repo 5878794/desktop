@@ -11,13 +11,64 @@
   color: #fff;
   font-size: 14px;
 
+  .top_left {
+    width: 60px;
+    font-size: 12px;
+    cursor: default;
+
+    span {
+      padding: 0 10px;
+      border-radius: 10px;
+      display: block;
+    }
+
+    &:hover span {
+      background: rgba(255, 255, 255, .3);
+    }
+  }
+
+  .top_name {
+    font-size: 12px;
+    cursor: default;
+    padding: 0 10px;
+    border-radius: 14px;
+
+    img {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 10px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, .3);
+    }
+  }
+
   .time {
     width: 200px;
+  }
+
+  .right {
+    img {
+      display: inline-block;
+      width: 34px;
+      height: 14px;
+      margin-right: 5px;
+      cursor: default;
+      padding: 0 10px;
+      border-radius: 14px;
+    }
+
+    &:hover img {
+      background: rgba(255, 255, 255, .3);
+    }
+
   }
 }
 
 .apps {
-  width: 100px;
+  width: 60px;
   height: 100%;
   background: green;
 }

@@ -7,7 +7,6 @@ import right from '@/components/desktop/system/right';
 //css
 import boxStyle from './css/box.module.scss';
 import desktopStyle from './css/index.module.scss';
-import system from "@/components/desktop/system";
 
 export default defineComponent({
     components: {left, appName, systemTime, right},
@@ -18,7 +17,7 @@ export default defineComponent({
         return <>
             <div class={[boxStyle.box_hlc, boxStyle.boxflex1]}>
                 <left/>
-                <app-name/>
+                <app-name icon='./favicon.ico' name='测试app'/>
             </div>
             <systemTime/>
             <right/>
