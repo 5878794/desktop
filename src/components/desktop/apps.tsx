@@ -24,7 +24,7 @@ export default defineComponent({
                         })
                     }
                 </div>
-                <app id='more' name='所有应用程序' icon={morePng}/>
+                <app id='more'/>
             </div>
         </>
     }
