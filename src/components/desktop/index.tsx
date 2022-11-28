@@ -4,8 +4,8 @@ import apps from '@/components/desktop/apps';
 import desktop from "@/components/desktop/desktop";
 
 //css
-import boxStyle from './box.module.scss';
-import desktopStyle from './index.module.scss';
+import boxStyle from './css/box.module.scss';
+import desktopStyle from './css/index.module.scss';
 
 
 export default defineComponent({
