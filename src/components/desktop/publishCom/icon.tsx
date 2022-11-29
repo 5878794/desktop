@@ -1,4 +1,5 @@
 import {defineComponent} from "vue";
+import boxStyle from '../css/box.module.scss'
 
 export default defineComponent({
     props: {
@@ -31,7 +32,7 @@ export default defineComponent({
         if (this.type === 'img') {
             return <img src={this.src}/>
         } else if (this.type === 'svg') {
-            return <span class={['iconfont', this.newSrc]}></span>
+            return <span class={['iconfont', this.newSrc, boxStyle.box_hcc]}></span>
         } else {
             console.error(`icon:${this.src} 未识别！`);
             return null;

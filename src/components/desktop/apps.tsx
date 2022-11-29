@@ -3,7 +3,6 @@ import {defineComponent} from "vue";
 import app from './apps/app'
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
-import morePng from "@/assets/more.png";
 
 import {appList} from "@/components/desktop/cache/data";
 

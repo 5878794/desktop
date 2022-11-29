@@ -16,7 +16,6 @@ export default defineComponent({
     },
     setup(props, {expose}) {
         const appInfo = getAppInfo(props.id);
-        console.log(appInfo, props.id)
 
         const clickFn = () => {
             openWin(props.id);
