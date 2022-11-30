@@ -1,4 +1,5 @@
 import {reactive, ref} from "vue";
+import app from "@/components/desktop/apps/app";
 
 //系统内置app列表
 const systemApp = [
@@ -61,6 +62,18 @@ const systemBarDom = reactive({
 const appsDom = reactive({
     width: 60,
     height: window.innerHeight - systemBarDom.height
+});
+const winMinW = 200;
+const winMinH = 100;
+const winSize = reactive({
+    minX: appsDom.width,
+    maxX: window.innerWidth - appsDom.width,
+    minY: 0,
+    maxY: window.innerHeight - systemBarDom.height,
+    minW: winMinW,
+    maxW: window.innerWidth,
+    minH: '',
+    maxH: ''
 });
 window.addEventListener('resize', () => {
     winDom.width = window.innerWidth;
