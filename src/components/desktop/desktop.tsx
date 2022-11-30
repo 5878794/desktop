@@ -2,7 +2,6 @@
 
 import {defineComponent} from "vue";
 import win from "@/components/desktop/win/win";
-
 //cache
 import {getAppInfo, openedWin} from "@/components/desktop/cache/data";
 

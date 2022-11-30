@@ -1,5 +1,5 @@
 //打开的窗口
-import {defineComponent, ref} from "vue";
+import {defineComponent, watch, ref} from "vue";
 
 import {getAppInfo, cursor} from "@/components/desktop/cache/data";
 import icon from '@/components/desktop/publishCom/icon';
@@ -22,6 +22,7 @@ export default defineComponent({
         const h = ref(appInfo.h);
         const z = ref(appInfo.z);
         const active = ref(appInfo.active);
+        const el = ref(null);
 
         const mouseDownFn = (e: MouseEvent) => {
             mouseMove.mousedown({
@@ -32,15 +33,18 @@ export default defineComponent({
             });
         }
 
+        watch([x, y], () => {
+            const dom = el.value! as HTMLElement;
+            dom.style.left = x.value + 'px';
+            dom.style.top = y.value + 'px';
+        })
+
         expose({})
-        return {appInfo, mouseDownFn, x, y, w, h, z, active}
+        return {appInfo, mouseDownFn, el, x, y, w, h, z, active}
     },
     render() {
         console.log('re')
-        return <div
-            class={[desktopStyle.win, boxStyle.box_slt]}
-            style={`width:${this.w}px;height:${this.h}px;left:${this.x}px;top:${this.y}px;z-index:${this.z}`}
-        >
+        return <div ref='el' class={[desktopStyle.win, boxStyle.box_slt]}>
             <div onMousedown={this.mouseDownFn} class={[desktopStyle.win_top, boxStyle.box_hlc]}>
                 <div class={[desktopStyle.win_top_left, boxStyle.box_hlc]}>
                     <icon src='#icon-shangyiyehoutuifanhui'></icon>

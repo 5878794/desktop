@@ -17,12 +17,10 @@ export default defineComponent({
     components: {
         system, apps, desktop
     },
-    setup(props) {
-        console.log(props)
-    },
     render() {
+        const canNotHover = (cursor.value !== 'default') ? desktopStyle.canNotHover : '';
         return <div
-            class={[boxStyle.box_slt, desktopStyle.main]}
+            class={[boxStyle.box_slt, desktopStyle.main, canNotHover]}
             style={`cursor:${cursor.value}`}
         >
             <div class={[boxStyle.box_hlc, desktopStyle.toolbar]}>

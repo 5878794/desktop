@@ -76,11 +76,18 @@ const mouseMove: MouseMoveType = {
         const y = e.screenY;
         const mx = x - this.mouseStartPoint.x;
         const my = y - this.mouseStartPoint.y;
-        this.xRef!.value = this.x + mx;
-        this.yRef!.value = this.y + my;
-        this.cursor!.value = 'move';
+
+        if (this.type === 'move') {
+            this.xRef!.value = this.x + mx;
+            this.yRef!.value = this.y + my;
+            this.cursor!.value = 'move';
+        }
+
     },
     mouseUp(e) {
+        if (!this.moveState) {
+            return;
+        }
         this.moveState = false;
         this.cursor!.value = 'default';
     }
