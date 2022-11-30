@@ -28,8 +28,8 @@ export default defineComponent({
 
         const mouseDownFn = (e: MouseEvent) => {
             minMax = JSON.parse(JSON.stringify(winSize));
-            minMax.maxX = minMax.maxX - w.value;
-            minMax.maxY = minMax.maxY - h.value;
+            minMax.maxX = window.innerWidth - w.value;
+            minMax.maxY = window.innerHeight - systemBarDom.height - h.value;
             mouseMove.mousedown({e, x, y, cursor});
         }
         const topMouseDownFn = (e: MouseEvent) => {
