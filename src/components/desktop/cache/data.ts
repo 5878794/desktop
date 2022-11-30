@@ -1,5 +1,6 @@
 import {reactive, ref} from "vue";
 import app from "@/components/desktop/apps/app";
+import apps from "@/components/desktop/apps";
 
 //系统内置app列表
 const systemApp = [
@@ -67,19 +68,24 @@ const winMinW = 200;
 const winMinH = 100;
 const winSize = reactive({
     minX: appsDom.width,
-    maxX: window.innerWidth - appsDom.width,
+    maxX: window.innerWidth, //未减自身宽度
     minY: 0,
-    maxY: window.innerHeight - systemBarDom.height,
+    maxY: window.innerHeight - systemBarDom.height, //未减自身高度
     minW: winMinW,
-    maxW: window.innerWidth,
-    minH: '',
-    maxH: ''
+    maxW: window.innerWidth - appsDom.width,
+    minH: winMinH,
+    maxH: window.innerHeight - systemBarDom.height
 });
+console.log(window.innerWidth, appsDom.width)
 window.addEventListener('resize', () => {
     winDom.width = window.innerWidth;
     winDom.height = window.innerHeight;
     appsDom.height = window.innerHeight - systemBarDom.height;
     systemBarDom.width = window.innerWidth;
+    winSize.maxX = window.innerWidth - appsDom.width;
+    winSize.maxY = window.innerHeight - systemBarDom.height;
+    winSize.maxW = window.innerWidth - appsDom.width;
+    winSize.maxH = window.innerHeight - systemBarDom.height;
 }, {capture: false, passive: false})
 
 
@@ -92,5 +98,6 @@ export {
     cursor,
     winDom,
     appsDom,
-    systemBarDom
+    systemBarDom,
+    winSize
 }

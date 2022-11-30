@@ -1,7 +1,7 @@
 //打开的窗口
-import {defineComponent, watch, ref} from "vue";
+import {defineComponent, watch, ref, Ref} from "vue";
 
-import {getAppInfo, cursor} from "@/components/desktop/cache/data";
+import {getAppInfo, cursor, winSize, appsDom, systemBarDom} from "@/components/desktop/cache/data";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
 import checkXY from './checkXY';
@@ -24,23 +24,39 @@ export default defineComponent({
         const z = ref(appInfo.z);
         const active = ref(appInfo.active);
         const el = ref(null);
+        let minMax: any = {};
 
         const mouseDownFn = (e: MouseEvent) => {
+            minMax = JSON.parse(JSON.stringify(winSize));
+            minMax.maxX = minMax.maxX - w.value;
+            minMax.maxY = minMax.maxY - h.value;
             mouseMove.mousedown({e, x, y, cursor});
         }
         const topMouseDownFn = (e: MouseEvent) => {
+            minMax = JSON.parse(JSON.stringify(winSize));
+            minMax.maxY = y.value + h.value - minMax.minH;
+            minMax.maxH = y.value + h.value;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'top'});
         }
         const leftMouseDownFn = (e: MouseEvent) => {
+            minMax = JSON.parse(JSON.stringify(winSize));
+            minMax.maxX = x.value + w.value - minMax.minW;
+            //右侧app列的宽度要减去
+            minMax.maxW = x.value + w.value - appsDom.width;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'left'});
         }
         const rightMouseDownFn = (e: MouseEvent) => {
+            minMax = JSON.parse(JSON.stringify(winSize));
+            minMax.maxW = window.innerWidth - x.value;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'right'});
         }
         const bottomMouseDownFn = (e: MouseEvent) => {
+            minMax = JSON.parse(JSON.stringify(winSize));
+            minMax.maxH = window.innerHeight - y.value - systemBarDom.height;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'bottom'});
         }
         const leftTopMouseDownFn = (e: MouseEvent) => {
+            //TODO
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'leftTop'});
         }
         const rightTopMouseDownFn = (e: MouseEvent) => {
@@ -53,13 +69,32 @@ export default defineComponent({
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'rightBottom'});
         }
 
+        const getMinMaxValue = (val: Ref<number>, min: number, max: number) => {
+            val.value = (val.value >= min) ? val.value : min;
+            val.value = (val.value <= max) ? val.value : max;
+            return val;
+        }
+
+        const checkXY = (x: Ref<number>, y: Ref<number>, w: Ref<number>, h: Ref<number>) => {
+            x = getMinMaxValue(x, minMax.minX, minMax.maxX);
+            y = getMinMaxValue(y, minMax.minY, minMax.maxY);
+            w = getMinMaxValue(w, minMax.minW, minMax.maxW);
+            h = getMinMaxValue(h, minMax.minH, minMax.maxH);
+            return {
+                newX: x,
+                newY: y,
+                newW: w,
+                newH: h
+            }
+        }
+
         watch([x, y, w, h], () => {
-            const {newX, newY} = checkXY(x.value, y.value);
+            const {newX, newY, newW, newH} = checkXY(x, y, w, h);
             const dom = el.value! as HTMLElement;
-            dom.style.left = newX + 'px';
-            dom.style.top = newY + 'px';
-            dom.style.width = w.value + 'px';
-            dom.style.height = h.value + 'px';
+            dom.style.left = newX.value + 'px';
+            dom.style.top = newY.value + 'px';
+            dom.style.width = newW.value + 'px';
+            dom.style.height = newH.value + 'px';
         })
 
         expose({})
