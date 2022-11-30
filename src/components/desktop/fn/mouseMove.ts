@@ -29,14 +29,14 @@ interface MouseMoveType {
     mousedown: (opt: mouseDownParamType) => void,
     moveState: boolean,
     mouseMove: (e: MouseEvent) => void,
-    mouseUp: (e: MouseEvent) => void
+    mouseUp: () => void
 }
 
 window.addEventListener('mousemove', (e) => {
     mouseMove.mouseMove(e);
 }, {capture: false, passive: false});
-window.addEventListener('mouseup', (e) => {
-    mouseMove.mouseUp(e);
+window.addEventListener('mouseup', () => {
+    mouseMove.mouseUp();
 }, {capture: false, passive: false})
 
 const mouseMove: MouseMoveType = {
@@ -54,6 +54,8 @@ const mouseMove: MouseMoveType = {
     hRef: undefined,
     moveState: false,
     mousedown(opt) {
+        opt.e.preventDefault();
+        opt.e.stopPropagation();
         this.moveState = true;
         this.cursor = opt.cursor ? opt.cursor : ref('');
         this.x = opt.x.value;
@@ -82,9 +84,51 @@ const mouseMove: MouseMoveType = {
             this.yRef!.value = this.y + my;
             this.cursor!.value = 'move';
         }
+        if (this.type === 'top') {
+            this.yRef!.value = this.y + my;
+            this.cursor!.value = 'n-resize';
+            this.hRef!.value = this.h - my;
+        }
+        if (this.type === 'left') {
+            this.xRef!.value = this.x + mx;
+            this.cursor!.value = 'w-resize';
+            this.wRef!.value = this.w - mx;
+        }
+        if (this.type === 'right') {
+            this.cursor!.value = 'e-resize';
+            this.wRef!.value = this.w + mx;
+        }
+        if (this.type === 'bottom') {
+            this.cursor!.value = 's-resize';
+            this.hRef!.value = this.h + my;
+        }
+        if (this.type === 'leftTop') {
+            this.xRef!.value = this.x + mx;
+            this.yRef!.value = this.y + my;
+            this.cursor!.value = 'nw-resize';
+            this.hRef!.value = this.h - my;
+            this.wRef!.value = this.w - mx;
+        }
+        if (this.type === 'rightTop') {
+            this.yRef!.value = this.y + my;
+            this.cursor!.value = 'ne-resize';
+            this.hRef!.value = this.h - my;
+            this.wRef!.value = this.w + mx;
+        }
+        if (this.type === 'leftBottom') {
+            this.xRef!.value = this.x + mx;
+            this.cursor!.value = 'sw-resize';
+            this.hRef!.value = this.h + my;
+            this.wRef!.value = this.w - mx;
+        }
+        if (this.type === 'rightBottom') {
+            this.cursor!.value = 'se-resize';
+            this.hRef!.value = this.h + my;
+            this.wRef!.value = this.w + mx;
+        }
 
     },
-    mouseUp(e) {
+    mouseUp() {
         if (!this.moveState) {
             return;
         }

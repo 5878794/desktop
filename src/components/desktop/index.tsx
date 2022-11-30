@@ -9,7 +9,7 @@ import desktopStyle from './css/index.module.scss';
 
 //data
 import {appList} from './setting';
-import {registerApp, cursor} from './cache/data';
+import {registerApp, cursor, systemBarDom} from './cache/data';
 
 registerApp(appList);
 
@@ -23,7 +23,10 @@ export default defineComponent({
             class={[boxStyle.box_slt, desktopStyle.main, canNotHover]}
             style={`cursor:${cursor.value}`}
         >
-            <div class={[boxStyle.box_hlc, desktopStyle.toolbar]}>
+            <div
+                class={[boxStyle.box_hlc, desktopStyle.toolbar]}
+                style={`height:${systemBarDom.height}px;`}
+            >
                 {/*顶部系统条*/}
                 <system/>
             </div>

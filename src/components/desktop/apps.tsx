@@ -4,7 +4,7 @@ import app from './apps/app'
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
 
-import {appList, getAppInfo} from "@/components/desktop/cache/data";
+import {appList, getAppInfo, appsDom} from "@/components/desktop/cache/data";
 
 export default defineComponent({
     components: {app},
@@ -13,7 +13,10 @@ export default defineComponent({
     },
     render() {
         return <>
-            <div class={[boxStyle.box_sct, desktopStyle.apps]}>
+            <div
+                class={[boxStyle.box_sct, desktopStyle.apps]}
+                style={`width:${appsDom.width}px;`}
+            >
                 <div class={[boxStyle.boxflex1]}>
                     {
                         appList.value.map((id: string) => {

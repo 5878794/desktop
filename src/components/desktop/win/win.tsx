@@ -4,6 +4,7 @@ import {defineComponent, watch, ref} from "vue";
 import {getAppInfo, cursor} from "@/components/desktop/cache/data";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
+import checkXY from './checkXY';
 
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
@@ -25,22 +26,56 @@ export default defineComponent({
         const el = ref(null);
 
         const mouseDownFn = (e: MouseEvent) => {
-            mouseMove.mousedown({
-                e: e,
-                x: x,
-                y: y,
-                cursor: cursor
-            });
+            mouseMove.mousedown({e, x, y, cursor});
+        }
+        const topMouseDownFn = (e: MouseEvent) => {
+            mouseMove.mousedown({e, x, y, cursor, w, h, type: 'top'});
+        }
+        const leftMouseDownFn = (e: MouseEvent) => {
+            mouseMove.mousedown({e, x, y, cursor, w, h, type: 'left'});
+        }
+        const rightMouseDownFn = (e: MouseEvent) => {
+            mouseMove.mousedown({e, x, y, cursor, w, h, type: 'right'});
+        }
+        const bottomMouseDownFn = (e: MouseEvent) => {
+            mouseMove.mousedown({e, x, y, cursor, w, h, type: 'bottom'});
+        }
+        const leftTopMouseDownFn = (e: MouseEvent) => {
+            mouseMove.mousedown({e, x, y, cursor, w, h, type: 'leftTop'});
+        }
+        const rightTopMouseDownFn = (e: MouseEvent) => {
+            mouseMove.mousedown({e, x, y, cursor, w, h, type: 'rightTop'});
+        }
+        const leftBottomMouseDownFn = (e: MouseEvent) => {
+            mouseMove.mousedown({e, x, y, cursor, w, h, type: 'leftBottom'});
+        }
+        const rightBottomMouseDownFn = (e: MouseEvent) => {
+            mouseMove.mousedown({e, x, y, cursor, w, h, type: 'rightBottom'});
         }
 
-        watch([x, y], () => {
+        watch([x, y, w, h], () => {
+            const {newX, newY} = checkXY(x.value, y.value);
             const dom = el.value! as HTMLElement;
-            dom.style.left = x.value + 'px';
-            dom.style.top = y.value + 'px';
+            dom.style.left = newX + 'px';
+            dom.style.top = newY + 'px';
+            dom.style.width = w.value + 'px';
+            dom.style.height = h.value + 'px';
         })
 
         expose({})
-        return {appInfo, mouseDownFn, el, x, y, w, h, z, active}
+        return {
+            appInfo,
+            mouseDownFn,
+            topMouseDownFn,
+            leftMouseDownFn,
+            rightMouseDownFn,
+            bottomMouseDownFn,
+            leftTopMouseDownFn,
+            rightTopMouseDownFn,
+            leftBottomMouseDownFn,
+            rightBottomMouseDownFn,
+            el, x, y, w, h, z, active
+        }
     },
     render() {
         console.log('re')
@@ -68,14 +103,14 @@ export default defineComponent({
                 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                 123
             </div>
-            <div class={desktopStyle.top_scale}></div>
-            <div class={desktopStyle.left_scale}></div>
-            <div class={desktopStyle.right_scale}></div>
-            <div class={desktopStyle.bottom_scale}></div>
-            <div class={desktopStyle.left_top_scale}></div>
-            <div class={desktopStyle.right_top_scale}></div>
-            <div class={desktopStyle.left_bottom_scale}></div>
-            <div class={desktopStyle.right_bottom_scale}></div>
+            <div onMousedown={this.topMouseDownFn} class={desktopStyle.top_scale}></div>
+            <div onMousedown={this.leftMouseDownFn} class={desktopStyle.left_scale}></div>
+            <div onMousedown={this.rightMouseDownFn} class={desktopStyle.right_scale}></div>
+            <div onMousedown={this.bottomMouseDownFn} class={desktopStyle.bottom_scale}></div>
+            <div onMousedown={this.leftTopMouseDownFn} class={desktopStyle.left_top_scale}></div>
+            <div onMousedown={this.rightTopMouseDownFn} class={desktopStyle.right_top_scale}></div>
+            <div onMousedown={this.leftBottomMouseDownFn} class={desktopStyle.left_bottom_scale}></div>
+            <div onMousedown={this.rightBottomMouseDownFn} class={desktopStyle.right_bottom_scale}></div>
         </div>
     }
 })
