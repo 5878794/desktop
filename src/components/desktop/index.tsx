@@ -9,7 +9,7 @@ import desktopStyle from './css/index.module.scss';
 
 //data
 import {appList} from './setting';
-import {registerApp} from './cache/data';
+import {registerApp, cursor} from './cache/data';
 
 registerApp(appList);
 
@@ -21,7 +21,10 @@ export default defineComponent({
         console.log(props)
     },
     render() {
-        return <div class={[boxStyle.box_slt, desktopStyle.main]}>
+        return <div
+            class={[boxStyle.box_slt, desktopStyle.main]}
+            style={`cursor:${cursor.value}`}
+        >
             <div class={[boxStyle.box_hlc, desktopStyle.toolbar]}>
                 {/*顶部系统条*/}
                 <system/>

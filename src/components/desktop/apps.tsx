@@ -4,7 +4,7 @@ import app from './apps/app'
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
 
-import {appList} from "@/components/desktop/cache/data";
+import {appList, getAppInfo} from "@/components/desktop/cache/data";
 
 export default defineComponent({
     components: {app},
@@ -16,7 +16,8 @@ export default defineComponent({
             <div class={[boxStyle.box_sct, desktopStyle.apps]}>
                 <div class={[boxStyle.boxflex1]}>
                     {
-                        appList.value.map((item: any) => {
+                        appList.value.map((id: string) => {
+                            const item = getAppInfo(id);
                             return <app
                                 id={item.id}
                             />

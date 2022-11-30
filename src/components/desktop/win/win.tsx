@@ -1,8 +1,9 @@
 //打开的窗口
-import {defineComponent} from "vue";
+import {defineComponent, ref} from "vue";
 
-import {getAppInfo} from "@/components/desktop/cache/data";
+import {getAppInfo, cursor} from "@/components/desktop/cache/data";
 import icon from '@/components/desktop/publishCom/icon';
+import mouseMove from "@/components/desktop/fn/mouseMove";
 
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
@@ -15,16 +16,31 @@ export default defineComponent({
     setup(props, {expose}) {
         const appInfo = getAppInfo(props.id);
         console.log(appInfo)
+        const x = ref(appInfo.x);
+        const y = ref(appInfo.y);
+        const w = ref(appInfo.w);
+        const h = ref(appInfo.h);
+        const z = ref(appInfo.z);
+        const active = ref(appInfo.active);
 
         const mouseDownFn = (e: MouseEvent) => {
-            console.log(e)
+            mouseMove.mousedown({
+                e: e,
+                x: x,
+                y: y,
+                cursor: cursor
+            });
         }
 
         expose({})
-        return {appInfo, mouseDownFn}
+        return {appInfo, mouseDownFn, x, y, w, h, z, active}
     },
     render() {
-        return <div class={[desktopStyle.win, boxStyle.box_slt]}>
+        console.log('re')
+        return <div
+            class={[desktopStyle.win, boxStyle.box_slt]}
+            style={`width:${this.w}px;height:${this.h}px;left:${this.x}px;top:${this.y}px;z-index:${this.z}`}
+        >
             <div onMousedown={this.mouseDownFn} class={[desktopStyle.win_top, boxStyle.box_hlc]}>
                 <div class={[desktopStyle.win_top_left, boxStyle.box_hlc]}>
                     <icon src='#icon-shangyiyehoutuifanhui'></icon>
@@ -41,7 +57,7 @@ export default defineComponent({
                 </div>
             </div>
             <div class={[boxStyle.boxflex1, desktopStyle.win_main]}>
-                <div style='width:200%;height:20px;background:red;'>test</div>
+                <div style='width:200%;height:20px;background:red;'>{new Date().getTime()}</div>
                 {this.appInfo.name}asdfasdfjaskdhfkjashdfkjhasdfhasjkdhfsahdf阿斯顿交付海军阿克苏的和佛教阿山东分局喀什地方哈桑的发挥
                 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>

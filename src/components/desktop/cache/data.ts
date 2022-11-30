@@ -5,12 +5,23 @@ const systemApp = [
     {id: 'more', name: '所有应用', icon: '#icon-more-grid-big', com: ''}
 ];
 
+const cursor = ref('default');
 const openedWin: any = ref([]);
 const appList: any = ref([]);
 const appListObj: any = {};
 
+const catchAppListObj = (item: any) => {
+    item.x = 65;//left
+    item.y = 5;//top
+    item.w = 600;//width
+    item.h = 400;//height
+    item.z = 10;//z-index
+    item.active = false; //是否选中状态
+    appListObj[item.id] = item;
+}
 systemApp.map((rs: any) => {
-    appListObj[rs.id] = rs;
+    catchAppListObj(rs);
+    // appListObj[rs.id] = rs;
 })
 
 const openWin = (id: string) => {
@@ -19,8 +30,9 @@ const openWin = (id: string) => {
 
 const registerApp = (apps: any) => {
     apps.map((item: any) => {
-        appList.value.push(item);
-        appListObj[item.id] = item;
+        appList.value.push(item.id);
+        catchAppListObj(item);
+        // appListObj[item.id] = item;
     })
 }
 
@@ -34,5 +46,6 @@ export {
     openedWin,
     getAppInfo,
     appList,
-    openWin
+    openWin,
+    cursor
 }
