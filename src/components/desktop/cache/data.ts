@@ -77,7 +77,7 @@ const winSize = reactive({
     minH: winMinH,
     maxH: window.innerHeight - systemBarDom.height
 });
-console.log(window.innerWidth, appsDom.width)
+
 window.addEventListener('resize', () => {
     winDom.width = window.innerWidth;
     winDom.height = window.innerHeight;
