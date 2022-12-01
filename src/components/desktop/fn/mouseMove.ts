@@ -29,14 +29,15 @@ interface MouseMoveType {
     mousedown: (opt: mouseDownParamType) => void,
     moveState: boolean,
     mouseMove: (e: MouseEvent) => void,
-    mouseUp: () => void
+    mouseUp: (e: MouseEvent) => void,
+    handlerData: (e: MouseEvent) => void
 }
 
 window.addEventListener('mousemove', (e) => {
     mouseMove.mouseMove(e);
 }, {capture: false, passive: false});
-window.addEventListener('mouseup', () => {
-    mouseMove.mouseUp();
+window.addEventListener('mouseup', (e) => {
+    mouseMove.mouseUp(e);
 }, {capture: false, passive: false})
 
 const mouseMove: MouseMoveType = {
@@ -74,6 +75,17 @@ const mouseMove: MouseMoveType = {
         if (!this.moveState) {
             return;
         }
+        this.handlerData(e);
+
+    },
+    mouseUp(e) {
+        if (!this.moveState) {
+            return;
+        }
+        this.moveState = false;
+        this.cursor!.value = 'default';
+    },
+    handlerData(e) {
         const x = e.screenX;
         const y = e.screenY;
         const mx = x - this.mouseStartPoint.x;
@@ -126,14 +138,6 @@ const mouseMove: MouseMoveType = {
             this.hRef!.value = this.h + my;
             this.wRef!.value = this.w + mx;
         }
-
-    },
-    mouseUp() {
-        if (!this.moveState) {
-            return;
-        }
-        this.moveState = false;
-        this.cursor!.value = 'default';
     }
 }
 

@@ -1,6 +1,6 @@
 import {defineComponent, onMounted, ref} from "vue";
 import desktopStyle from '../css/index.module.scss';
-import {setDockingEdge, appsDom} from "@/components/desktop/cache/data";
+import {setDockingEdge, appsDom, dockingEdgeState} from "@/components/desktop/cache/data";
 
 export default defineComponent({
     setup(props, {expose}) {
@@ -8,20 +8,19 @@ export default defineComponent({
         setDockingEdge(dockingEdgeRef);
 
         let dom: any = null;
-        let nowType = '';
         onMounted(() => {
             dom = dockingEdgeRef.value! as HTMLElement;
         })
         let timeoutFn: any = null;
 
         const showLeft = () => {
-            if (nowType === 'left') {
+            if (dockingEdgeState.value === 'left') {
                 return;
             }
             if (timeoutFn) {
                 clearTimeout(timeoutFn);
             }
-            nowType = 'left';
+            dockingEdgeState.value = 'left';
             reset();
             dom.style.display = 'block';
             dom.style.left = appsDom.width + 'px';
@@ -37,13 +36,13 @@ export default defineComponent({
             }, 10)
         }
         const showRight = () => {
-            if (nowType === 'right') {
+            if (dockingEdgeState.value === 'right') {
                 return;
             }
             if (timeoutFn) {
                 clearTimeout(timeoutFn);
             }
-            nowType = 'right';
+            dockingEdgeState.value = 'right';
             reset();
             dom.style.display = 'block';
             dom.style.right = 0;
@@ -59,13 +58,13 @@ export default defineComponent({
             }, 10)
         }
         const showTop = () => {
-            if (nowType === 'top') {
+            if (dockingEdgeState.value === 'top') {
                 return;
             }
             if (timeoutFn) {
                 clearTimeout(timeoutFn);
             }
-            nowType = 'top';
+            dockingEdgeState.value = 'top';
             reset();
             dom.style.display = 'block';
             dom.style.top = 0;
@@ -80,13 +79,13 @@ export default defineComponent({
             }, 10)
         }
         const showBottom = () => {
-            if (nowType === 'bottom') {
+            if (dockingEdgeState.value === 'bottom') {
                 return;
             }
             if (timeoutFn) {
                 clearTimeout(timeoutFn);
             }
-            nowType = 'bottom';
+            dockingEdgeState.value = 'bottom';
             reset();
             dom.style.display = 'block';
             dom.style.bottom = 0;
@@ -112,10 +111,10 @@ export default defineComponent({
             dom.style.marginLeft = 'unset';
         }
         const hide = () => {
-            if (nowType === 'hide') {
+            if (dockingEdgeState.value === 'hide') {
                 return;
             }
-            nowType = 'hide';
+            dockingEdgeState.value = 'hide';
             dom.style.display = 'none';
             reset();
         }

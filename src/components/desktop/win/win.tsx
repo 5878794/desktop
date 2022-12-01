@@ -1,9 +1,19 @@
 //打开的窗口
 import {defineComponent, watch, ref, Ref} from "vue";
 
-import {getAppInfo, cursor, winSize, appsDom, systemBarDom, getDockingEdge} from "@/components/desktop/cache/data";
+import {
+    getAppInfo,
+    cursor,
+    mouseDownWinId,
+    winSize,
+    appsDom,
+    systemBarDom,
+    getDockingEdge,
+    dockingEdgeState
+} from "@/components/desktop/cache/data";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
+import {getArrayRepeatItem} from "@/components/desktop/fn/array";
 
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
@@ -27,18 +37,21 @@ export default defineComponent({
         let minMax: any = {};
 
         const mouseDownFn = (e: MouseEvent) => {
+            mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
             minMax.maxX = window.innerWidth - w.value;
             minMax.maxY = window.innerHeight - systemBarDom.height - h.value;
             mouseMove.mousedown({e, x, y, cursor});
         }
         const topMouseDownFn = (e: MouseEvent) => {
+            mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
             minMax.maxY = y.value + h.value - minMax.minH;
             minMax.maxH = y.value + h.value;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'top'});
         }
         const leftMouseDownFn = (e: MouseEvent) => {
+            mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
             minMax.maxX = x.value + w.value - minMax.minW;
             //右侧app列的宽度要减去
@@ -46,16 +59,19 @@ export default defineComponent({
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'left'});
         }
         const rightMouseDownFn = (e: MouseEvent) => {
+            mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
             minMax.maxW = window.innerWidth - x.value;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'right'});
         }
         const bottomMouseDownFn = (e: MouseEvent) => {
+            mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
             minMax.maxH = window.innerHeight - y.value - systemBarDom.height;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'bottom'});
         }
         const leftTopMouseDownFn = (e: MouseEvent) => {
+            mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
             minMax.maxX = x.value + w.value - minMax.minW;
             minMax.maxW = x.value + w.value - appsDom.width;
@@ -64,6 +80,7 @@ export default defineComponent({
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'leftTop'});
         }
         const rightTopMouseDownFn = (e: MouseEvent) => {
+            mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
             minMax.maxW = window.innerWidth - x.value;
             minMax.maxY = y.value + h.value - minMax.minH;
@@ -71,6 +88,7 @@ export default defineComponent({
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'rightTop'});
         }
         const leftBottomMouseDownFn = (e: MouseEvent) => {
+            mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
             minMax.maxX = x.value + w.value - minMax.minW;
             minMax.maxW = x.value + w.value - appsDom.width;
@@ -78,33 +96,34 @@ export default defineComponent({
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'leftBottom'});
         }
         const rightBottomMouseDownFn = (e: MouseEvent) => {
+            mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
             minMax.maxW = window.innerWidth - x.value;
             minMax.maxH = window.innerHeight - y.value - systemBarDom.height;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'rightBottom'});
         }
 
-        const getMinMaxValue = (val: Ref<number>, min: number, max: number) => {
-            val.value = (val.value >= min) ? val.value : min;
-            val.value = (val.value <= max) ? val.value : max;
+        const getMinMaxValue = (val: number, min: number, max: number) => {
+            val = (val >= min) ? val : min;
+            val = (val <= max) ? val : max;
             return val;
         }
 
         const checkXY = (x: Ref<number>, y: Ref<number>, w: Ref<number>, h: Ref<number>) => {
-            x = getMinMaxValue(x, minMax.minX, minMax.maxX);
-            y = getMinMaxValue(y, minMax.minY, minMax.maxY);
-            w = getMinMaxValue(w, minMax.minW, minMax.maxW);
-            h = getMinMaxValue(h, minMax.minH, minMax.maxH);
+            const newX = getMinMaxValue(x.value, minMax.minX, minMax.maxX);
+            const newY = getMinMaxValue(y.value, minMax.minY, minMax.maxY);
+            const newW = getMinMaxValue(w.value, minMax.minW, minMax.maxW);
+            const newH = getMinMaxValue(h.value, minMax.minH, minMax.maxH);
             return {
-                newX: x,
-                newY: y,
-                newW: w,
-                newH: h
+                newX,
+                newY,
+                newW,
+                newH
             }
         }
 
         //是否显示快速放到到半屏窗口辅助显示框
-        const showDockingEdge = (x: Ref<number>, y: Ref<number>) => {
+        const showDockingEdge = (x: Ref<number>, y: Ref<number>, dir: string) => {
             if (cursor.value !== 'move' || !dockingEdge) {
                 return;
             }
@@ -117,34 +136,133 @@ export default defineComponent({
                 return;
             }
 
-            if (xVal <= minX) {
+            if (xVal <= minX && dir === 'left') {
                 dockingEdge.showLeft();
                 return;
             }
 
-            if (xVal >= maxX) {
+            if (xVal >= maxX && dir === 'right') {
                 dockingEdge.showRight();
                 return;
             }
 
-            if (yVal <= minY) {
+            if (yVal <= minY && dir === 'top') {
                 dockingEdge.showTop();
                 return;
             }
-            if (yVal >= maxY) {
+            if (yVal >= maxY && dir === 'bottom') {
                 dockingEdge.showBottom();
                 return;
             }
+
+            dockingEdge.hide();
         }
 
-        watch([x, y, w, h], () => {
-            showDockingEdge(x, y);
+        const changeWinSize = (type: string) => {
+            dockingEdge.hide();
+            const dom = el.value! as HTMLElement;
+
+            let left: any, top: any, width: any, height: any;
+            if (type === 'top') {
+                left = appsDom.width;
+                top = 0;
+                width = window.innerWidth - appsDom.width;
+                height = (window.innerHeight - systemBarDom.height) / 2;
+            } else if (type === 'bottom') {
+                left = appsDom.width;
+                top = (window.innerHeight - systemBarDom.height) / 2;
+                width = window.innerWidth - appsDom.width;
+                height = (window.innerHeight - systemBarDom.height) / 2;
+            } else if (type === 'left') {
+                left = appsDom.width;
+                top = 0;
+                width = (window.innerWidth - appsDom.width) / 2;
+                height = (window.innerHeight - systemBarDom.height);
+            } else if (type === 'right') {
+                left = (window.innerWidth - appsDom.width) / 2 + appsDom.width;
+                top = 0;
+                width = (window.innerWidth - appsDom.width) / 2;
+                height = (window.innerHeight - systemBarDom.height)
+            }
+
+            dom.style.transition = 'all .2s ease-out';
+            x.value = left;
+            y.value = top;
+            w.value = width;
+            h.value = height;
+            setTimeout(() => {
+                dom.style.width = width + 'px';
+                dom.style.height = height + 'px';
+                dom.style.top = top + 'px';
+                dom.style.left = left + 'px';
+                setTimeout(() => {
+                    dom.style.transition = 'unset';
+                }, 200)
+            }, 10)
+        }
+
+        const dirTemp: any = [];
+        const getMouseDir = (newVal: any, oldVal: any) => {
+            const newX = newVal[0];
+            const newY = newVal[1];
+            const oldX = oldVal[0];
+            const oldY = oldVal[1];
+            const mx = (newX - oldX);
+            const my = (newY - oldY);
+
+            if (Math.abs(mx) > Math.abs(my)) {
+                if (newX > oldX) {
+                    dirTemp.push('right');
+                } else {
+                    dirTemp.push('left');
+                }
+            } else {
+                if (newY > oldY) {
+                    dirTemp.push('bottom');
+                } else {
+                    dirTemp.push('top');
+                }
+            }
+
+            if (dirTemp.length > 5) {
+                dirTemp.shift()
+            }
+
+            //从5次触发中取最多的返回
+            return getArrayRepeatItem(dirTemp);
+        }
+
+
+        //拖动监听
+        watch([x, y, w, h], (newVal, oldValue) => {
+            if (cursor.value === 'default') {
+                return;
+            }
+            const dir = getMouseDir(newVal, oldValue);
+            showDockingEdge(x, y, dir);
             const {newX, newY, newW, newH} = checkXY(x, y, w, h);
             const dom = el.value! as HTMLElement;
-            dom.style.left = newX.value + 'px';
-            dom.style.top = newY.value + 'px';
-            dom.style.width = newW.value + 'px';
-            dom.style.height = newH.value + 'px';
+            dom.style.left = newX + 'px';
+            dom.style.top = newY + 'px';
+            dom.style.width = newW + 'px';
+            dom.style.height = newH + 'px';
+        })
+        watch(cursor, (newVal: string, oldVal: string) => {
+            if (props.id === mouseDownWinId.value && newVal === 'default') {
+                //是当前dom
+                if (oldVal === 'move' && dockingEdgeState.value !== 'hide') {
+                    //靠边放执行
+                    changeWinSize(dockingEdgeState.value);
+                } else {
+                    //普通保存位置信息等
+                    const {newX, newY, newW, newH} = checkXY(x, y, w, h);
+                    x.value = newX;
+                    y.value = newY;
+                    w.value = newW;
+                    h.value = newH;
+                }
+
+            }
         })
 
         expose({})
@@ -162,7 +280,8 @@ export default defineComponent({
             el, x, y, w, h, z, active
         }
     },
-    render() {
+    render
+    () {
         return <div ref='el' class={[desktopStyle.win, boxStyle.box_slt]}>
             <div onMousedown={this.mouseDownFn} class={[desktopStyle.win_top, boxStyle.box_hlc]}>
                 <div class={[desktopStyle.win_top_left, boxStyle.box_hlc]}>

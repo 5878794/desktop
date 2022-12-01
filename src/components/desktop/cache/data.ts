@@ -87,6 +87,8 @@ window.addEventListener('resize', () => {
 }, {capture: false, passive: false})
 
 let dockingEdgeRef: any;
+const dockingEdgeState = ref('hide');
+const mouseDownWinId = ref('');
 const setDockingEdge = (el: any) => {
     dockingEdgeRef = el;
 }
@@ -96,6 +98,7 @@ const getDockingEdge = () => {
     obj = obj.exposed || null;
     return obj;
 }
+
 
 export {
     registerApp,
@@ -109,5 +112,7 @@ export {
     systemBarDom,
     winSize,
     setDockingEdge,
-    getDockingEdge
+    getDockingEdge,
+    dockingEdgeState,
+    mouseDownWinId
 }
