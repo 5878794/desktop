@@ -4,7 +4,7 @@ import app from './apps/app'
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
 
-import {appList, getAppInfo, appsDom} from "@/components/desktop/cache/data";
+import {appList, getAppInfo, appsDom, openedWin} from "@/components/desktop/cache/data";
 
 export default defineComponent({
     components: {app},
@@ -22,7 +22,7 @@ export default defineComponent({
                         appList.value.map((id: string) => {
                             const item = getAppInfo(id);
                             return <app
-                                id={item.id}
+                                id={item.id} hasOpen={(openedWin.value.indexOf(id) > -1)}
                             />
                         })
                     }

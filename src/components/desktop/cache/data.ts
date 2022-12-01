@@ -1,5 +1,4 @@
 import {reactive, ref} from "vue";
-import dockingEdge from "@/components/desktop/win/dockingEdge";
 
 //系统内置app列表
 const systemApp = [
@@ -15,6 +14,13 @@ const openedWin: any = ref([]);
 const appList: any = ref([]);
 //所有app的对象列表   {id:{}}
 const appListObj: any = {};
+//desktop中层级管理 10-1000
+let desktopZ = 10;
+const getDesktopshowZ = () => {
+    desktopZ++;
+    //TODO
+}
+
 
 //创建app缓存
 const catchAppListObj = (item: any) => {
@@ -31,7 +37,12 @@ systemApp.map((rs: any) => {
 })
 
 const openWin = (id: string) => {
-    openedWin.value.push(id);
+    if (openedWin.value.indexOf(id) === -1) {
+        openedWin.value.push(id);
+    } else {
+        //提高层级 显示
+
+    }
 }
 
 const registerApp = (apps: any) => {

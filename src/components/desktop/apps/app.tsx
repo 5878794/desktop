@@ -14,6 +14,7 @@ export default defineComponent({
     components: {icon},
     props: {
         id: {type: String, default: ''},
+        hasOpen: {type: Boolean, default: false}
     },
     setup(props, {expose}) {
         const appInfo = getAppInfo(props.id);
@@ -50,6 +51,7 @@ export default defineComponent({
         }
     },
     render() {
+        const style = (this.hasOpen) ? 'display:block;' : 'display:none;';
         const createApp = () => {
             return <div
                 onClick={this.clickFn}
@@ -57,6 +59,7 @@ export default defineComponent({
                 onMouseleave={this.mouseleaveFn}
                 class={[desktopStyle.app, boxStyle.box_hcc]}
             >
+                <div class={[desktopStyle.opend]} style={style}></div>
                 <icon src={this.appInfo.icon}/>
                 <div
                     style={`display:${this.display};opacity:${this.opacity}`}
