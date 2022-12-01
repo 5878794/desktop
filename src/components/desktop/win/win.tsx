@@ -4,7 +4,6 @@ import {defineComponent, watch, ref, Ref} from "vue";
 import {getAppInfo, cursor, winSize, appsDom, systemBarDom} from "@/components/desktop/cache/data";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
-import checkXY from './checkXY';
 
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
@@ -56,16 +55,31 @@ export default defineComponent({
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'bottom'});
         }
         const leftTopMouseDownFn = (e: MouseEvent) => {
-            //TODO
+            minMax = JSON.parse(JSON.stringify(winSize));
+            minMax.maxX = x.value + w.value - minMax.minW;
+            minMax.maxW = x.value + w.value - appsDom.width;
+            minMax.maxY = y.value + h.value - minMax.minH;
+            minMax.maxH = y.value + h.value;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'leftTop'});
         }
         const rightTopMouseDownFn = (e: MouseEvent) => {
+            minMax = JSON.parse(JSON.stringify(winSize));
+            minMax.maxW = window.innerWidth - x.value;
+            minMax.maxY = y.value + h.value - minMax.minH;
+            minMax.maxH = y.value + h.value;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'rightTop'});
         }
         const leftBottomMouseDownFn = (e: MouseEvent) => {
+            minMax = JSON.parse(JSON.stringify(winSize));
+            minMax.maxX = x.value + w.value - minMax.minW;
+            minMax.maxW = x.value + w.value - appsDom.width;
+            minMax.maxH = window.innerHeight - y.value - systemBarDom.height;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'leftBottom'});
         }
         const rightBottomMouseDownFn = (e: MouseEvent) => {
+            minMax = JSON.parse(JSON.stringify(winSize));
+            minMax.maxW = window.innerWidth - x.value;
+            minMax.maxH = window.innerHeight - y.value - systemBarDom.height;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'rightBottom'});
         }
 

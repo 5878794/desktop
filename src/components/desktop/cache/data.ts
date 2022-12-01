@@ -66,6 +66,7 @@ const appsDom = reactive({
 });
 const winMinW = 200;
 const winMinH = 100;
+//所有max的值都是在点击的时候计算
 const winSize = reactive({
     minX: appsDom.width,
     maxX: window.innerWidth, //未减自身宽度
