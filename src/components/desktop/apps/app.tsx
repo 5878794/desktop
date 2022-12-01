@@ -4,10 +4,9 @@ import {defineComponent, ref} from "vue";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import icon from '@/components/desktop/publishCom/icon';
-import {cursor} from "@/components/desktop/cache/data";
 
 //cache
-import {getAppInfo, openWin} from "@/components/desktop/cache/data";
+import {getAppInfo, openWin, cursor} from "@/components/desktop/cache/index";
 
 
 export default defineComponent({

@@ -10,7 +10,7 @@ import {
     systemBarDom,
     getDockingEdge,
     dockingEdgeState
-} from "@/components/desktop/cache/data";
+} from "@/components/desktop/cache/index";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
 import {getArrayRepeatItem} from "@/components/desktop/fn/array";

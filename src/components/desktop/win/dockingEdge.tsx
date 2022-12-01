@@ -1,6 +1,6 @@
 import {defineComponent, onMounted, ref} from "vue";
 import desktopStyle from '../css/index.module.scss';
-import {setDockingEdge, appsDom, dockingEdgeState} from "@/components/desktop/cache/data";
+import {setDockingEdge, appsDom, dockingEdgeState} from "@/components/desktop/cache/index";
 
 export default defineComponent({
     setup(props, {expose}) {

@@ -4,7 +4,7 @@ import {defineComponent} from "vue";
 import win from "@/components/desktop/win/win";
 import dockingEdge from "@/components/desktop/win/dockingEdge";
 //cache
-import {getAppInfo, openedWin} from "@/components/desktop/cache/data";
+import {getAppInfo, openedWin} from "@/components/desktop/cache/index";
 
 
 export default defineComponent({

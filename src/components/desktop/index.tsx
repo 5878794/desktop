@@ -9,7 +9,7 @@ import desktopStyle from './css/index.module.scss';
 
 //data
 import {appList} from './setting';
-import {registerApp, cursor, systemBarDom} from './cache/data';
+import {registerApp, cursor, systemBarDom} from './cache/index';
 
 registerApp(appList);
 
