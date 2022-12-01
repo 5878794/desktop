@@ -1,6 +1,6 @@
 //打开的窗口
 import {defineComponent, watch, ref, Ref} from "vue";
-
+import {clone} from 'lodash';
 import {
     getAppInfo,
     cursor,
@@ -26,6 +26,8 @@ export default defineComponent({
     setup(props, {expose}) {
         const appInfo = getAppInfo(props.id);
         const dockingEdge = getDockingEdge();
+
+        //克隆
         console.log(appInfo)
         const x = ref(appInfo.x);
         const y = ref(appInfo.y);

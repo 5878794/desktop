@@ -1,129 +1,21 @@
-import {reactive, ref} from "vue";
-
-//系统内置app列表
-const systemApp = [
-    //icon为 iconfont的class图标
-    {id: 'more', name: '所有应用', icon: '#icon-more-grid-big', com: ''}
-];
-
-//全局鼠标样式
-const cursor = ref('default');
-//打开的窗口  id[]
-const openedWin: any = ref([]);
-//外部添加的app 在左侧app列显示
-const appList: any = ref([]);
-//所有app的对象列表   {id:{}}
-const appListObj: any = {};
-//desktop中层级管理 10-1000
-let desktopZ = 10;
-const getDesktopshowZ = () => {
-    desktopZ++;
-    //TODO
-}
-
-
-//创建app缓存
-const catchAppListObj = (item: any) => {
-    item.x = 65;//left
-    item.y = 5;//top
-    item.w = 600;//width
-    item.h = 400;//height
-    item.z = 10;//z-index
-    item.active = false; //是否选中状态
-    appListObj[item.id] = item;
-}
-systemApp.map((rs: any) => {
-    catchAppListObj(rs);
-})
-
-const openWin = (id: string) => {
-    if (openedWin.value.indexOf(id) === -1) {
-        openedWin.value.push(id);
-    } else {
-        //提高层级 显示
-
-    }
-}
-
-const registerApp = (apps: any) => {
-    apps.map((item: any) => {
-        appList.value.push(item.id);
-        catchAppListObj(item);
-    })
-}
-
-//通过id 返回app信息
-const getAppInfo = (id: string) => {
-    return (appListObj[id]) ? appListObj[id] : null;
-}
-
-//窗口大小
-const winDom = reactive({
-    width: window.innerWidth,
-    height: window.innerHeight
-});
-//顶部条
-const systemBarDom = reactive({
-    width: window.innerWidth,
-    height: 20
-})
-//左侧app条
-const appsDom = reactive({
-    width: 60,
-    height: window.innerHeight - systemBarDom.height
-});
-const winMinW = 200;
-const winMinH = 100;
-//所有max的值都是在点击的时候计算
-const winSize = reactive({
-    minX: appsDom.width,
-    maxX: window.innerWidth, //未减自身宽度
-    minY: 0,
-    maxY: window.innerHeight - systemBarDom.height, //未减自身高度
-    minW: winMinW,
-    maxW: window.innerWidth - appsDom.width,
-    minH: winMinH,
-    maxH: window.innerHeight - systemBarDom.height
-});
-
-window.addEventListener('resize', () => {
-    winDom.width = window.innerWidth;
-    winDom.height = window.innerHeight;
-    appsDom.height = window.innerHeight - systemBarDom.height;
-    systemBarDom.width = window.innerWidth;
-    winSize.maxX = window.innerWidth - appsDom.width;
-    winSize.maxY = window.innerHeight - systemBarDom.height;
-    winSize.maxW = window.innerWidth - appsDom.width;
-    winSize.maxH = window.innerHeight - systemBarDom.height;
-}, {capture: false, passive: false})
-
-let dockingEdgeRef: any;
-const dockingEdgeState = ref('hide');
-const mouseDownWinId = ref('');
-const setDockingEdge = (el: any) => {
-    dockingEdgeRef = el;
-}
-const getDockingEdge = () => {
-    let obj = (dockingEdgeRef && dockingEdgeRef.value) ? dockingEdgeRef.value : {};
-    obj = (obj.__vueParentComponent) ? obj.__vueParentComponent : {};
-    obj = obj.exposed || null;
-    return obj;
-}
+import {registerApp, getAppInfo, appList, getAllAppInfo} from './app';
+import {appsDom, systemBarDom, winSize} from './doms';
+import {setDockingEdge, getDockingEdge, dockingEdgeState} from './dockingEdge';
+import {openedWin, openWin, cursor, mouseDownWinId} from './win';
 
 
 export {
     registerApp,
-    openedWin,
     getAppInfo,
     appList,
+    openedWin,
     openWin,
     cursor,
-    winDom,
+    mouseDownWinId,
     appsDom,
     systemBarDom,
     winSize,
     setDockingEdge,
     getDockingEdge,
     dockingEdgeState,
-    mouseDownWinId
 }
