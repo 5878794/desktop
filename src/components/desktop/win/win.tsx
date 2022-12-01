@@ -1,7 +1,7 @@
 //打开的窗口
 import {defineComponent, watch, ref, Ref} from "vue";
 
-import {getAppInfo, cursor, winSize, appsDom, systemBarDom} from "@/components/desktop/cache/data";
+import {getAppInfo, cursor, winSize, appsDom, systemBarDom, getDockingEdge} from "@/components/desktop/cache/data";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
 
@@ -15,6 +15,7 @@ export default defineComponent({
     },
     setup(props, {expose}) {
         const appInfo = getAppInfo(props.id);
+        const dockingEdge = getDockingEdge();
         console.log(appInfo)
         const x = ref(appInfo.x);
         const y = ref(appInfo.y);
@@ -102,7 +103,42 @@ export default defineComponent({
             }
         }
 
+        //是否显示快速放到到半屏窗口辅助显示框
+        const showDockingEdge = (x: Ref<number>, y: Ref<number>) => {
+            if (cursor.value !== 'move' || !dockingEdge) {
+                return;
+            }
+            const xVal = x.value;
+            const yVal = y.value;
+            const {minX, maxX, minY, maxY} = minMax;
+
+            if (xVal > minX && xVal < maxX && yVal > minY && yVal < maxY) {
+                dockingEdge.hide();
+                return;
+            }
+
+            if (xVal <= minX) {
+                dockingEdge.showLeft();
+                return;
+            }
+
+            if (xVal >= maxX) {
+                dockingEdge.showRight();
+                return;
+            }
+
+            if (yVal <= minY) {
+                dockingEdge.showTop();
+                return;
+            }
+            if (yVal >= maxY) {
+                dockingEdge.showBottom();
+                return;
+            }
+        }
+
         watch([x, y, w, h], () => {
+            showDockingEdge(x, y);
             const {newX, newY, newW, newH} = checkXY(x, y, w, h);
             const dom = el.value! as HTMLElement;
             dom.style.left = newX.value + 'px';
@@ -127,7 +163,6 @@ export default defineComponent({
         }
     },
     render() {
-        console.log('re')
         return <div ref='el' class={[desktopStyle.win, boxStyle.box_slt]}>
             <div onMousedown={this.mouseDownFn} class={[desktopStyle.win_top, boxStyle.box_hlc]}>
                 <div class={[desktopStyle.win_top_left, boxStyle.box_hlc]}>

@@ -1,6 +1,5 @@
 import {reactive, ref} from "vue";
-import app from "@/components/desktop/apps/app";
-import apps from "@/components/desktop/apps";
+import dockingEdge from "@/components/desktop/win/dockingEdge";
 
 //系统内置app列表
 const systemApp = [
@@ -29,7 +28,6 @@ const catchAppListObj = (item: any) => {
 }
 systemApp.map((rs: any) => {
     catchAppListObj(rs);
-    // appListObj[rs.id] = rs;
 })
 
 const openWin = (id: string) => {
@@ -40,7 +38,6 @@ const registerApp = (apps: any) => {
     apps.map((item: any) => {
         appList.value.push(item.id);
         catchAppListObj(item);
-        // appListObj[item.id] = item;
     })
 }
 
@@ -89,6 +86,16 @@ window.addEventListener('resize', () => {
     winSize.maxH = window.innerHeight - systemBarDom.height;
 }, {capture: false, passive: false})
 
+let dockingEdgeRef: any;
+const setDockingEdge = (el: any) => {
+    dockingEdgeRef = el;
+}
+const getDockingEdge = () => {
+    let obj = (dockingEdgeRef && dockingEdgeRef.value) ? dockingEdgeRef.value : {};
+    obj = (obj.__vueParentComponent) ? obj.__vueParentComponent : {};
+    obj = obj.exposed || null;
+    return obj;
+}
 
 export {
     registerApp,
@@ -100,5 +107,7 @@ export {
     winDom,
     appsDom,
     systemBarDom,
-    winSize
+    winSize,
+    setDockingEdge,
+    getDockingEdge
 }
