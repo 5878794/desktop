@@ -167,7 +167,8 @@
     font-size: 14px;
     color: #333;
     z-index: 10;
-    opacity: .9;
+    opacity: 1;
+    border: 1px solid #ccc;
 
     .win_top {
         width: 100%;
@@ -311,6 +312,7 @@
 .active {
     box-shadow: 0 0 20px #333;
     opacity: 1;
+    border: none;
 
     .win_top {
         color: #333;
