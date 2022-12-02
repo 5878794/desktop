@@ -21,6 +21,7 @@ const catchAppListObj = (item: any) => {
     item.h = 400;//height
     item.z = 10;//z-index
     item.active = false; //是否选中状态
+    item.isShow = true; //是否显示
     appListObj[item.id] = item;
 }
 systemApp.map((rs: any) => {

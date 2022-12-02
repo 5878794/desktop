@@ -4,7 +4,7 @@ import {defineComponent} from "vue";
 import win from "@/components/desktop/win/win";
 import dockingEdge from "@/components/desktop/win/dockingEdge";
 //cache
-import {getOpenedWinInfo, openedWin} from "@/components/desktop/cache/index";
+import {getAppInfo, openedWin} from "@/components/desktop/cache/index";
 
 
 export default defineComponent({
@@ -14,9 +14,9 @@ export default defineComponent({
             <docking-edge/>
             {
                 openedWin.value.map((id: any) => {
-                    const item = getOpenedWinInfo(id);
+                    const item = getAppInfo(id);
                     if (item) {
-                        return <win id={item.id}/>
+                        return <win key={item.id} id={item.id}/>
                     } else {
                         console.error(`id为：${id}的app不存在！`);
                         return null;

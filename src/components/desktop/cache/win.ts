@@ -22,6 +22,7 @@ const createOpenedWinData = (appInfo: any) => {
     copyAppInfo.h = ref(appInfo.h);
     copyAppInfo.z = ref(appInfo.z);
     copyAppInfo.active = ref(appInfo.active);
+    copyAppInfo.isShow = ref(appInfo.isShow);
     cacheData[appInfo.id] = copyAppInfo;
 }
 
@@ -31,7 +32,10 @@ const openWin = (appInfo: any) => {
     if (openedWin.value.indexOf(id) === -1) {
         createOpenedWinData(appInfo);
         openedWin.value.push(id);
+    } else {
+        cacheData[appInfo.id].isShow.value = true;
     }
+
 
     chooseWin(appInfo.id)
 }
@@ -50,10 +54,17 @@ const chooseWin = (id: string) => {
     cacheData[id].active.value = true;
 }
 
+const closeWin = (id: string) => {
+    const n = openedWin.value.indexOf(id);
+    openedWin.value.splice(n, 1);
+    delete cacheData[id];
+}
+
 
 export {
     openedWin,
     openWin,
+    closeWin,
     cursor,
     mouseDownWinId,
     getOpenedWinInfo,

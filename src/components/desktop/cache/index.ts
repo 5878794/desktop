@@ -1,7 +1,7 @@
 import {registerApp, getAppInfo, appList} from './app';
 import {appsDom, systemBarDom, winSize} from './doms';
 import {setDockingEdge, getDockingEdge, dockingEdgeState} from './dockingEdge';
-import {openedWin, chooseWin, openWin, cursor, mouseDownWinId, getOpenedWinInfo} from './win';
+import {openedWin, chooseWin, openWin, closeWin, cursor, mouseDownWinId, getOpenedWinInfo} from './win';
 
 
 export {
@@ -10,6 +10,7 @@ export {
     appList,
     openedWin,
     openWin,
+    closeWin,
     cursor,
     mouseDownWinId,
     appsDom,

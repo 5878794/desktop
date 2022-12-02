@@ -9,6 +9,7 @@ import {
     getDockingEdge,
     dockingEdgeState,
     chooseWin,
+    closeWin,
     getOpenedWinInfo
 } from "@/components/desktop/cache/index";
 import icon from '@/components/desktop/publishCom/icon';
@@ -34,6 +35,7 @@ export default defineComponent({
         const h = appInfo.h;
         const z = appInfo.z;
         const active = appInfo.active;
+        const isShow = appInfo.isShow;
         const el = ref(null);
         let minMax: any = {};
 
@@ -242,12 +244,59 @@ export default defineComponent({
         }
         const setIsActive = () => {
             const dom = el.value! as HTMLElement;
-            console.log(active.value)
             if (active.value) {
                 dom.classList.add(desktopStyle.active);
             } else {
                 dom.classList.remove(desktopStyle.active);
             }
+        }
+
+        const refreshXYWH = () => {
+            const dom = el.value! as HTMLElement;
+            dom.style.left = x.value + 'px';
+            dom.style.top = y.value + 'px';
+            dom.style.width = w.value + 'px';
+            dom.style.height = h.value + 'px';
+        }
+
+        const minFn = () => {
+            isShow.value = false;
+        }
+        let recoverCache: any = {};
+        const maxFn = () => {
+            recoverCache = {
+                x: x.value,
+                y: y.value,
+                w: w.value,
+                h: h.value
+            };
+
+            w.value = window.innerWidth - appsDom.width;
+            h.value = window.innerHeight - systemBarDom.height;
+            x.value = appsDom.width;
+            y.value = 0;
+
+            const dom = el.value! as HTMLElement;
+            const maxBtn = dom.getElementsByClassName('__maxBtn__')[0];
+            const recoverBtn = dom.getElementsByClassName('__recoverBtn__')[0];
+            (maxBtn as HTMLElement).style.display = 'none';
+            (recoverBtn as HTMLElement).style.display = 'flex';
+            refreshXYWH();
+        }
+        const closeFn = () => {
+            closeWin(props.id);
+        }
+        const recoverFn = () => {
+            w.value = recoverCache.w;
+            h.value = recoverCache.h;
+            x.value = recoverCache.x;
+            y.value = recoverCache.y;
+            const dom = el.value! as HTMLElement;
+            const maxBtn = dom.getElementsByClassName('__maxBtn__')[0];
+            const recoverBtn = dom.getElementsByClassName('__recoverBtn__')[0];
+            (maxBtn as HTMLElement).style.display = 'flex';
+            (recoverBtn as HTMLElement).style.display = 'none';
+            refreshXYWH();
         }
 
         //拖动监听
@@ -266,7 +315,7 @@ export default defineComponent({
         })
         watch(cursor, (newVal: string, oldVal: string) => {
             if (props.id === mouseDownWinId.value && newVal === 'default') {
-                //是当前dom
+                //是当前dom 释放时
                 if (oldVal === 'move' && dockingEdgeState.value !== 'hide') {
                     //靠边放执行
                     changeWinSize(dockingEdgeState.value);
@@ -288,6 +337,15 @@ export default defineComponent({
             setIsActive();
 
         })
+        watch(isShow, () => {
+            const dom = el.value! as HTMLElement;
+            if (isShow.value) {
+                //TODO 动画
+                dom.style.display = 'flex';
+            } else {
+                dom.style.display = 'none';
+            }
+        })
         onMounted(() => {
             setZIndex();
             setIsActive();
@@ -307,6 +365,10 @@ export default defineComponent({
             rightTopMouseDownFn,
             leftBottomMouseDownFn,
             rightBottomMouseDownFn,
+            recoverFn,
+            minFn,
+            maxFn,
+            closeFn,
             el, x, y, w, h, z, active
         }
     },
@@ -321,10 +383,11 @@ export default defineComponent({
                     {this.appInfo.name}
                 </div>
                 <div class={[desktopStyle.win_top_right, boxStyle.box_hlc]}>
-                    <icon src='#icon-zuixiaohua3'></icon>
-                    <icon src='#icon-zuidahua' style='display:none;'></icon>
-                    <icon src='#icon-zuidahua1'></icon>
-                    <icon src='#icon-guanbi'></icon>
+                    <icon onClick={this.minFn} src='#icon-zuixiaohua3'></icon>
+                    <icon class='__recoverBtn__' onClick={this.recoverFn} src='#icon-zuidahua'
+                          style='display:none;'></icon>
+                    <icon class='__maxBtn__' onClick={this.maxFn} src='#icon-zuidahua1'></icon>
+                    <icon onClick={this.closeFn} src='#icon-guanbi'></icon>
                 </div>
             </div>
             <div class={[boxStyle.boxflex1, desktopStyle.win_main]}>
