@@ -40,14 +40,9 @@ const getAppInfo = (id: string) => {
     return (appListObj[id]) ? appListObj[id] : null;
 }
 
-//获取所有app
-const getAllAppInfo = () => {
-    return appListObj;
-}
 
 export {
     registerApp,
     getAppInfo,
     appList,
-    getAllAppInfo
 }

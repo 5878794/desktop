@@ -2,14 +2,14 @@
 import {defineComponent, watch, ref, Ref} from "vue";
 import {clone} from 'lodash';
 import {
-    getAppInfo,
     cursor,
     mouseDownWinId,
     winSize,
     appsDom,
     systemBarDom,
     getDockingEdge,
-    dockingEdgeState
+    dockingEdgeState,
+    getOpenedWinInfo
 } from "@/components/desktop/cache/index";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
@@ -24,19 +24,19 @@ export default defineComponent({
         id: {type: String, default: ''}
     },
     setup(props, {expose}) {
-        const appInfo = getAppInfo(props.id);
+        const appInfo = getOpenedWinInfo(props.id);
         const dockingEdge = getDockingEdge();
 
-        //克隆
         console.log(appInfo)
-        const x = ref(appInfo.x);
-        const y = ref(appInfo.y);
-        const w = ref(appInfo.w);
-        const h = ref(appInfo.h);
-        const z = ref(appInfo.z);
-        const active = ref(appInfo.active);
+        const x = appInfo.x;
+        const y = appInfo.y;
+        const w = appInfo.w;
+        const h = appInfo.h;
+        const z = appInfo.z;
+        const active = appInfo.active;
         const el = ref(null);
         let minMax: any = {};
+
 
         const mouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
@@ -266,6 +266,11 @@ export default defineComponent({
 
             }
         })
+        watch(z, () => {
+            const dom = el.value! as HTMLElement;
+            dom.style.zIndex = z.value;
+        })
+
 
         expose({})
         return {

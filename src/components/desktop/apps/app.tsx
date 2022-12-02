@@ -19,7 +19,7 @@ export default defineComponent({
         const appInfo = getAppInfo(props.id);
 
         const clickFn = () => {
-            openWin(props.id);
+            openWin(appInfo);
         }
 
         const display = ref('none');

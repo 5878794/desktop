@@ -2,28 +2,33 @@ import {Ref} from "vue";
 
 //desktop中层级管理 10-1000
 let desktopZ = 10;
-const maxZ = 20;
+const maxZ = 9000;
 const minZ = 10;
 
 
 //获取显示到最顶层的层级
 //超过1000自动重排
-const getDesktopShowZ = (getAllApp: any, openedWin: Ref<string[]>) => {
+const getDesktopShowZ = (openedWin: any) => {
     desktopZ++;
 
     //重置所有打开的app的z-index
     if (desktopZ > maxZ) {
         const temp: any = [];
-        openedWin.value.map((id: string) => {
-            temp.push(getAllApp[id]);
-        })
+        for (const appInfo of Object.values(openedWin)) {
+            temp.push(appInfo);
+        }
         temp.sort((a: any, b: any) => {
-            return (a.z > b.z) ? -1 : 1;
+            return (a.z.value > b.z.value) ? -1 : 1;
         })
-        console.log(temp);
+        let n = minZ;
+        temp.map((rs: any) => {
+            n++;
+            rs.z.value = n;
+        })
+        desktopZ = n++;
     }
-
     return desktopZ;
+
 }
 
 
