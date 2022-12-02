@@ -241,6 +241,15 @@ export default defineComponent({
             const dom = el.value! as HTMLElement;
             dom.style.zIndex = z.value;
         }
+        const setIsActive = () => {
+            const dom = el.value! as HTMLElement;
+            console.log(active.value)
+            if (active.value) {
+                dom.classList.add(desktopStyle.active);
+            } else {
+                dom.classList.remove(desktopStyle.active);
+            }
+        }
 
         //拖动监听
         watch([x, y, w, h], (newVal, oldValue) => {
@@ -277,10 +286,12 @@ export default defineComponent({
             setZIndex();
         })
         watch(active, () => {
-            console.log(active.value)
+            setIsActive();
+
         })
         onMounted(() => {
             setZIndex();
+            setIsActive();
         })
 
 
@@ -300,9 +311,8 @@ export default defineComponent({
             el, x, y, w, h, z, active
         }
     },
-    render
-    () {
-        return <div onMousedown={this.chooseFn} ref='el' class={[desktopStyle.win, boxStyle.box_slt]}>
+    render() {
+        return <div ref='el' class={[desktopStyle.win, boxStyle.box_slt]}>
             <div onMousedown={this.mouseDownFn} class={[desktopStyle.win_top, boxStyle.box_hlc]}>
                 <div class={[desktopStyle.win_top_left, boxStyle.box_hlc]}>
                     <icon src='#icon-shangyiyehoutuifanhui'></icon>
@@ -334,6 +344,7 @@ export default defineComponent({
             <div onMousedown={this.rightTopMouseDownFn} class={desktopStyle.right_top_scale}></div>
             <div onMousedown={this.leftBottomMouseDownFn} class={desktopStyle.left_bottom_scale}></div>
             <div onMousedown={this.rightBottomMouseDownFn} class={desktopStyle.right_bottom_scale}></div>
+            <div class={[desktopStyle.zz]} onMousedown={this.chooseFn}></div>
         </div>
     }
 })
