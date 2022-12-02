@@ -28,7 +28,6 @@ export default defineComponent({
         const appInfo = getOpenedWinInfo(props.id);
         const dockingEdge = getDockingEdge();
 
-        console.log(appInfo)
         const x = appInfo.x;
         const y = appInfo.y;
         const w = appInfo.w;

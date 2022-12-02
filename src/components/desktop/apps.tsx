@@ -22,6 +22,7 @@ export default defineComponent({
                         appList.value.map((id: string) => {
                             const item = getAppInfo(id);
                             return <app
+                                key={item.id}
                                 id={item.id} hasOpen={(openedWin.value.indexOf(id) > -1)}
                             />
                         })
