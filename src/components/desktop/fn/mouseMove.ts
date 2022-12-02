@@ -56,7 +56,6 @@ const mouseMove: MouseMoveType = {
     moveState: false,
     mousedown(opt) {
         opt.e.preventDefault();
-        opt.e.stopPropagation();
         this.moveState = true;
         this.cursor = opt.cursor ? opt.cursor : ref('');
         this.x = opt.x.value;

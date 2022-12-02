@@ -27,17 +27,27 @@ const createOpenedWinData = (appInfo: any) => {
 
 const openWin = (appInfo: any) => {
     const id = appInfo.id;
-    const newZ = getDesktopShowZ(cacheData);
 
     if (openedWin.value.indexOf(id) === -1) {
         createOpenedWinData(appInfo);
         openedWin.value.push(id);
     }
-    cacheData[id].z.value = newZ;
+
+    chooseWin(appInfo.id)
 }
 
 const getOpenedWinInfo = (id: string) => {
     return cacheData[id];
+}
+
+const chooseWin = (id: string) => {
+    const newZ = getDesktopShowZ(cacheData);
+    cacheData[id].z.value = newZ;
+
+    for (const appInfo of Object.values(cacheData)) {
+        (appInfo as any).active.value = false;
+    }
+    cacheData[id].active.value = true;
 }
 
 
@@ -47,4 +57,5 @@ export {
     cursor,
     mouseDownWinId,
     getOpenedWinInfo,
+    chooseWin
 }

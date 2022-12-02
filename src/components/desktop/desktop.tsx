@@ -4,7 +4,7 @@ import {defineComponent} from "vue";
 import win from "@/components/desktop/win/win";
 import dockingEdge from "@/components/desktop/win/dockingEdge";
 //cache
-import {getAppInfo, openedWin} from "@/components/desktop/cache/index";
+import {getOpenedWinInfo, openedWin} from "@/components/desktop/cache/index";
 
 
 export default defineComponent({
@@ -14,7 +14,7 @@ export default defineComponent({
             <docking-edge/>
             {
                 openedWin.value.map((id: any) => {
-                    const item = getAppInfo(id);
+                    const item = getOpenedWinInfo(id);
                     if (item) {
                         return <win id={item.id}/>
                     } else {

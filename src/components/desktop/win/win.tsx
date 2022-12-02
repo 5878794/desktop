@@ -1,5 +1,5 @@
 //打开的窗口
-import {defineComponent, watch, ref, Ref} from "vue";
+import {defineComponent, watch, ref, Ref, onMounted} from "vue";
 import {clone} from 'lodash';
 import {
     cursor,
@@ -9,6 +9,7 @@ import {
     systemBarDom,
     getDockingEdge,
     dockingEdgeState,
+    chooseWin,
     getOpenedWinInfo
 } from "@/components/desktop/cache/index";
 import icon from '@/components/desktop/publishCom/icon';
@@ -37,7 +38,9 @@ export default defineComponent({
         const el = ref(null);
         let minMax: any = {};
 
-
+        const chooseFn = () => {
+            chooseWin(props.id)
+        }
         const mouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
@@ -234,6 +237,10 @@ export default defineComponent({
             return getArrayRepeatItem(dirTemp);
         }
 
+        const setZIndex = () => {
+            const dom = el.value! as HTMLElement;
+            dom.style.zIndex = z.value;
+        }
 
         //拖动监听
         watch([x, y, w, h], (newVal, oldValue) => {
@@ -267,14 +274,20 @@ export default defineComponent({
             }
         })
         watch(z, () => {
-            const dom = el.value! as HTMLElement;
-            dom.style.zIndex = z.value;
+            setZIndex();
+        })
+        watch(active, () => {
+            console.log(active.value)
+        })
+        onMounted(() => {
+            setZIndex();
         })
 
 
         expose({})
         return {
             appInfo,
+            chooseFn,
             mouseDownFn,
             topMouseDownFn,
             leftMouseDownFn,
@@ -289,7 +302,7 @@ export default defineComponent({
     },
     render
     () {
-        return <div ref='el' class={[desktopStyle.win, boxStyle.box_slt]}>
+        return <div onMousedown={this.chooseFn} ref='el' class={[desktopStyle.win, boxStyle.box_slt]}>
             <div onMousedown={this.mouseDownFn} class={[desktopStyle.win_top, boxStyle.box_hlc]}>
                 <div class={[desktopStyle.win_top_left, boxStyle.box_hlc]}>
                     <icon src='#icon-shangyiyehoutuifanhui'></icon>
