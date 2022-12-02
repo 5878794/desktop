@@ -1,6 +1,5 @@
 //打开的窗口
 import {defineComponent, watch, ref, Ref, onMounted} from "vue";
-import {clone} from 'lodash';
 import {
     cursor,
     mouseDownWinId,
