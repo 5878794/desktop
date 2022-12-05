@@ -9,12 +9,12 @@ import {
     getDockingEdge,
     dockingEdgeState,
     chooseWin,
-    closeWin,
     getOpenedWinInfo
 } from "@/components/desktop/cache/index";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
 import {getArrayRepeatItem} from "@/components/desktop/fn/array";
+import rightBtnClick from './rightBtnClick';
 
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
@@ -250,53 +250,7 @@ export default defineComponent({
             }
         }
 
-        const refreshXYWH = () => {
-            const dom = el.value! as HTMLElement;
-            dom.style.left = x.value + 'px';
-            dom.style.top = y.value + 'px';
-            dom.style.width = w.value + 'px';
-            dom.style.height = h.value + 'px';
-        }
-
-        const minFn = () => {
-            isShow.value = false;
-        }
-        let recoverCache: any = {};
-        const maxFn = () => {
-            recoverCache = {
-                x: x.value,
-                y: y.value,
-                w: w.value,
-                h: h.value
-            };
-
-            w.value = window.innerWidth - appsDom.width;
-            h.value = window.innerHeight - systemBarDom.height;
-            x.value = appsDom.width;
-            y.value = 0;
-
-            const dom = el.value! as HTMLElement;
-            const maxBtn = dom.getElementsByClassName('__maxBtn__')[0];
-            const recoverBtn = dom.getElementsByClassName('__recoverBtn__')[0];
-            (maxBtn as HTMLElement).style.display = 'none';
-            (recoverBtn as HTMLElement).style.display = 'flex';
-            refreshXYWH();
-        }
-        const closeFn = () => {
-            closeWin(props.id);
-        }
-        const recoverFn = () => {
-            w.value = recoverCache.w;
-            h.value = recoverCache.h;
-            x.value = recoverCache.x;
-            y.value = recoverCache.y;
-            const dom = el.value! as HTMLElement;
-            const maxBtn = dom.getElementsByClassName('__maxBtn__')[0];
-            const recoverBtn = dom.getElementsByClassName('__recoverBtn__')[0];
-            (maxBtn as HTMLElement).style.display = 'flex';
-            (recoverBtn as HTMLElement).style.display = 'none';
-            refreshXYWH();
-        }
+        const {minFn, maxFn, closeFn, recoverFn} = rightBtnClick(props.id, el!);
 
         //拖动监听
         watch([x, y, w, h], (newVal, oldValue) => {
@@ -336,15 +290,7 @@ export default defineComponent({
             setIsActive();
 
         })
-        watch(isShow, () => {
-            const dom = el.value! as HTMLElement;
-            if (isShow.value) {
-                //TODO 动画
-                dom.style.display = 'flex';
-            } else {
-                dom.style.display = 'none';
-            }
-        })
+
         onMounted(() => {
             setZIndex();
             setIsActive();
