@@ -8,13 +8,13 @@ import {
     systemBarDom,
     getDockingEdge,
     dockingEdgeState,
-    chooseWin,
     getOpenedWinInfo
 } from "@/components/desktop/cache/index";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
 import {getArrayRepeatItem} from "@/components/desktop/fn/array";
 import rightBtnClick from './rightBtnClick';
+import activeFn from './active';
 
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
@@ -34,13 +34,10 @@ export default defineComponent({
         const h = appInfo.h;
         const z = appInfo.z;
         const active = appInfo.active;
-        const isShow = appInfo.isShow;
         const el = ref(null);
         let minMax: any = {};
 
-        const chooseFn = () => {
-            chooseWin(props.id)
-        }
+
         const mouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
             minMax = JSON.parse(JSON.stringify(winSize));
@@ -237,20 +234,9 @@ export default defineComponent({
             return getArrayRepeatItem(dirTemp);
         }
 
-        const setZIndex = () => {
-            const dom = el.value! as HTMLElement;
-            dom.style.zIndex = z.value;
-        }
-        const setIsActive = () => {
-            const dom = el.value! as HTMLElement;
-            if (active.value) {
-                dom.classList.add(desktopStyle.active);
-            } else {
-                dom.classList.remove(desktopStyle.active);
-            }
-        }
 
-        const {minFn, maxFn, closeFn, recoverFn} = rightBtnClick(props.id, el!);
+        const {minFn, maxFn, closeFn, recoverFn} = rightBtnClick(props.id, el);
+        const {chooseFn} = activeFn(props.id, el);
 
         //拖动监听
         watch([x, y, w, h], (newVal, oldValue) => {
@@ -282,18 +268,6 @@ export default defineComponent({
                 }
 
             }
-        })
-        watch(z, () => {
-            setZIndex();
-        })
-        watch(active, () => {
-            setIsActive();
-
-        })
-
-        onMounted(() => {
-            setZIndex();
-            setIsActive();
         })
 
 

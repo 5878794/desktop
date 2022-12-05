@@ -1,3 +1,4 @@
+//右上角按钮  最小化、最大化、恢复、关闭窗口
 import {appsDom, closeWin, getOpenedWinInfo, systemBarDom} from "@/components/desktop/cache";
 import {Ref, watch} from 'vue';
 
