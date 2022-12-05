@@ -1,5 +1,5 @@
 //打开的窗口
-import {defineComponent, ref} from "vue";
+import {createApp, defineComponent, nextTick, onMounted, ref} from "vue";
 import {getOpenedWinInfo} from "@/components/desktop/cache/index";
 import icon from '@/components/desktop/publishCom/icon';
 
@@ -7,6 +7,8 @@ import mouseEventFn from "./mouseEventFn";
 import rightBtnClick from './rightBtnClick';
 import activeFn from './active';
 import dockingEdgeFn from "./dockingEdgeFn";
+
+import guid from "@/components/desktop/fn/guid";
 
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
@@ -21,6 +23,7 @@ export default defineComponent({
         console.log(appInfo)
         const el = ref(null);
         const minMax: any = {};
+        const winContainerId = 'cId_' + guid();
 
 
         const {minFn, maxFn, closeFn, recoverFn} = rightBtnClick(props.id, el);
@@ -37,6 +40,19 @@ export default defineComponent({
             leftBottomMouseDownFn,
             rightBottomMouseDownFn
         } = mouseEventFn(props.id, minMax, el);
+
+
+        onMounted(() => {
+            if (appInfo.com) {
+                const tag = appInfo.com;
+                const props = appInfo.props;
+                const app = createApp(tag, props);
+                app.provide('destroy', () => {
+                    console.log('close to do');
+                })
+                app.mount('#' + winContainerId);
+            }
+        })
 
 
         expose({})
@@ -56,7 +72,8 @@ export default defineComponent({
             minFn,
             maxFn,
             closeFn,
-            el
+            el,
+            winContainerId
         }
     },
     render() {
@@ -64,9 +81,8 @@ export default defineComponent({
             if (this.appInfo.url) {
                 return <iframe class={[desktopStyle.iframe]} src={this.appInfo.url}></iframe>
             } else {
-                const tag = this.appInfo.com;
-                const props = this.appInfo.props;
-                return <tag {...props} />
+                // return <tag {...props} />
+                return null;
             }
         }
 
@@ -88,7 +104,7 @@ export default defineComponent({
                     <icon onClick={this.closeFn} src='#icon-guanbi'></icon>
                 </div>
             </div>
-            <div class={[boxStyle.boxflex1, desktopStyle.win_main]}>
+            <div id={this.winContainerId} class={[boxStyle.boxflex1, desktopStyle.win_main]}>
                 {readerApp()}
             </div>
             <div onMousedown={this.topMouseDownFn} class={desktopStyle.top_scale}></div>

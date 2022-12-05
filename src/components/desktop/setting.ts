@@ -3,11 +3,15 @@
 import morePng from "@/assets/more.png";
 import guid from "@/components/desktop/fn/guid";
 
-import {defineComponent, h} from "vue";
+import {defineComponent, h, inject} from "vue";
 
 const testCom = defineComponent({
     props: {
         name: {type: String, default: ''}
+    },
+    setup(props) {
+        const destroy = inject('destroy');
+        console.log(props, destroy)
     },
     render() {
         return h('div', this.name)
