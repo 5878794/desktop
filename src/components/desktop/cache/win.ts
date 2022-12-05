@@ -84,6 +84,10 @@ const autoChoose = () => {
     })
     if (chooseId) {
         chooseWin(chooseId);
+    } else {
+        topWinObj.name = '';
+        topWinObj.icon = '';
+        topWinObj.id = '';
     }
 }
 
