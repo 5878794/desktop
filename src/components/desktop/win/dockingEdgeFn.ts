@@ -1,10 +1,17 @@
 //窗口靠边辅助显示div
 
-import {cursor, getDockingEdge, getOpenedWinInfo} from "@/components/desktop/cache";
+import {
+    appsDom,
+    cursor, dockingEdgeState,
+    getDockingEdge,
+    getOpenedWinInfo,
+    mouseDownWinId,
+    systemBarDom
+} from "@/components/desktop/cache";
 import {Ref, watch} from "vue";
 import {getArrayRepeatMaxItem} from "@/components/desktop/fn/array";
 
-export default function (id: string, minMax: any) {
+export default function (id: string, minMax: any, el: Ref) {
     const dockingEdge = getDockingEdge();
     const appInfo = getOpenedWinInfo(id);
     const x = appInfo.x;
@@ -79,11 +86,63 @@ export default function (id: string, minMax: any) {
         return getArrayRepeatMaxItem(dirTemp);
     }
 
+    const changeWinSize = (type: string) => {
+        dockingEdge.hide();
+        const dom = el.value! as HTMLElement;
+
+        let left: any, top: any, width: any, height: any;
+        if (type === 'top') {
+            left = appsDom.width;
+            top = 0;
+            width = window.innerWidth - appsDom.width;
+            height = (window.innerHeight - systemBarDom.height) / 2;
+        } else if (type === 'bottom') {
+            left = appsDom.width;
+            top = (window.innerHeight - systemBarDom.height) / 2;
+            width = window.innerWidth - appsDom.width;
+            height = (window.innerHeight - systemBarDom.height) / 2;
+        } else if (type === 'left') {
+            left = appsDom.width;
+            top = 0;
+            width = (window.innerWidth - appsDom.width) / 2;
+            height = (window.innerHeight - systemBarDom.height);
+        } else if (type === 'right') {
+            left = (window.innerWidth - appsDom.width) / 2 + appsDom.width;
+            top = 0;
+            width = (window.innerWidth - appsDom.width) / 2;
+            height = (window.innerHeight - systemBarDom.height)
+        }
+
+        dom.style.transition = 'all .2s ease-out';
+        x.value = left;
+        y.value = top;
+        w.value = width;
+        h.value = height;
+        setTimeout(() => {
+            dom.style.width = width + 'px';
+            dom.style.height = height + 'px';
+            dom.style.top = top + 'px';
+            dom.style.left = left + 'px';
+            setTimeout(() => {
+                dom.style.transition = 'unset';
+            }, 200)
+        }, 10)
+    }
+
     watch([x, y, w, h], (newVal, oldValue) => {
         if (cursor.value !== 'move') {
             return;
         }
         const dir = getMouseDir(newVal, oldValue);
         showDockingEdge(x, y, dir);
+    })
+    watch(cursor, (newVal: string, oldVal: string) => {
+        if (id === mouseDownWinId.value && newVal === 'default') {
+            //是当前dom 释放时
+            if (oldVal === 'move' && dockingEdgeState.value !== 'hide') {
+                //靠边放执行
+                changeWinSize(dockingEdgeState.value);
+            }
+        }
     })
 }

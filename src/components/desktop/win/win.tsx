@@ -27,7 +27,6 @@ export default defineComponent({
     },
     setup(props, {expose}) {
         const appInfo = getOpenedWinInfo(props.id);
-        const dockingEdge = getDockingEdge();
 
         const x = appInfo.x;
         const y = appInfo.y;
@@ -135,53 +134,9 @@ export default defineComponent({
         }
 
 
-        const changeWinSize = (type: string) => {
-            dockingEdge.hide();
-            const dom = el.value! as HTMLElement;
-
-            let left: any, top: any, width: any, height: any;
-            if (type === 'top') {
-                left = appsDom.width;
-                top = 0;
-                width = window.innerWidth - appsDom.width;
-                height = (window.innerHeight - systemBarDom.height) / 2;
-            } else if (type === 'bottom') {
-                left = appsDom.width;
-                top = (window.innerHeight - systemBarDom.height) / 2;
-                width = window.innerWidth - appsDom.width;
-                height = (window.innerHeight - systemBarDom.height) / 2;
-            } else if (type === 'left') {
-                left = appsDom.width;
-                top = 0;
-                width = (window.innerWidth - appsDom.width) / 2;
-                height = (window.innerHeight - systemBarDom.height);
-            } else if (type === 'right') {
-                left = (window.innerWidth - appsDom.width) / 2 + appsDom.width;
-                top = 0;
-                width = (window.innerWidth - appsDom.width) / 2;
-                height = (window.innerHeight - systemBarDom.height)
-            }
-
-            dom.style.transition = 'all .2s ease-out';
-            x.value = left;
-            y.value = top;
-            w.value = width;
-            h.value = height;
-            setTimeout(() => {
-                dom.style.width = width + 'px';
-                dom.style.height = height + 'px';
-                dom.style.top = top + 'px';
-                dom.style.left = left + 'px';
-                setTimeout(() => {
-                    dom.style.transition = 'unset';
-                }, 200)
-            }, 10)
-        }
-
-
         const {minFn, maxFn, closeFn, recoverFn} = rightBtnClick(props.id, el);
         const {chooseFn} = activeFn(props.id, el);
-        dockingEdgeFn(props.id, minMax);
+        dockingEdgeFn(props.id, minMax, el);
 
         //拖动监听
         watch([x, y, w, h], (newVal, oldValue) => {
@@ -198,10 +153,7 @@ export default defineComponent({
         watch(cursor, (newVal: string, oldVal: string) => {
             if (props.id === mouseDownWinId.value && newVal === 'default') {
                 //是当前dom 释放时
-                if (oldVal === 'move' && dockingEdgeState.value !== 'hide') {
-                    //靠边放执行
-                    changeWinSize(dockingEdgeState.value);
-                } else {
+                if (!(oldVal === 'move' && dockingEdgeState.value !== 'hide')) {
                     //普通保存位置信息等
                     const {newX, newY, newW, newH} = checkXY(x, y, w, h);
                     x.value = newX;
