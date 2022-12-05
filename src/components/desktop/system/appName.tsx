@@ -4,6 +4,8 @@ import boxStyle from '../css/box.module.scss';
 import desktopStyle from '../css/index.module.scss';
 import icon from "@/components/desktop/publishCom/icon";
 
+import {topWinObj} from '../cache/index';
+
 export default defineComponent({
     components: {icon},
     props: {
@@ -21,14 +23,18 @@ export default defineComponent({
         }
     },
     render() {
-        return <>
-            <div
-                onClick={this.clickFn}
-                class={[boxStyle.box_hlc, desktopStyle.top_name]}
-            >
-                <icon src={this.icon}/>
-                <span>{this.name}</span>
-            </div>
-        </>
+        if (topWinObj.name && topWinObj.icon) {
+            return <>
+                <div
+                    onClick={this.clickFn}
+                    class={[boxStyle.box_hlc, desktopStyle.top_name]}
+                >
+                    <icon src={topWinObj.icon}/>
+                    <span>{topWinObj.name}</span>
+                </div>
+            </>
+        } else {
+            return null;
+        }
     }
 })

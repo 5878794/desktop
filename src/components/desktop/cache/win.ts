@@ -1,5 +1,5 @@
 //窗口操作相关缓存
-import {ref, Ref} from "vue";
+import {ref, Ref, reactive} from "vue";
 import {getDesktopShowZ} from './zindex';
 import {clone} from 'lodash';
 
@@ -12,6 +12,12 @@ const openedWin: Ref<string[]> = ref([]);
 const mouseDownWinId = ref('');
 //缓存打开的appInfo信息
 const cacheData: any = {};
+//最上层窗口对象
+const topWinObj = reactive({
+    name: '',
+    icon: '',
+    id: ''
+});
 
 
 const createOpenedWinData = (appInfo: any) => {
@@ -52,6 +58,11 @@ const chooseWin = (id: string) => {
         (appInfo as any).active.value = false;
     }
     cacheData[id].active.value = true;
+
+    //设置应用顶部功能菜单
+    topWinObj.name = cacheData[id].name;
+    topWinObj.icon = cacheData[id].icon;
+    topWinObj.id = id;
 }
 
 const closeWin = (id: string) => {
@@ -85,5 +96,6 @@ export {
     mouseDownWinId,
     getOpenedWinInfo,
     chooseWin,
-    autoChoose
+    autoChoose,
+    topWinObj
 }
