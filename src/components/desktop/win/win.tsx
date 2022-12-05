@@ -1,20 +1,21 @@
 //打开的窗口
-import {defineComponent, watch, ref, Ref, onMounted} from "vue";
+import {defineComponent, watch, ref, Ref} from "vue";
 import {
     cursor,
     mouseDownWinId,
     winSize,
     appsDom,
     systemBarDom,
-    getDockingEdge,
     dockingEdgeState,
-    getOpenedWinInfo
+    getOpenedWinInfo, getDockingEdge
 } from "@/components/desktop/cache/index";
 import icon from '@/components/desktop/publishCom/icon';
 import mouseMove from "@/components/desktop/fn/mouseMove";
-import {getArrayRepeatItem} from "@/components/desktop/fn/array";
+
 import rightBtnClick from './rightBtnClick';
 import activeFn from './active';
+import dockingEdgeFn from "./dockingEdgeFn";
+
 
 import boxStyle from "@/components/desktop/css/box.module.scss";
 import desktopStyle from "@/components/desktop/css/index.module.scss";
@@ -40,21 +41,24 @@ export default defineComponent({
 
         const mouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
-            minMax = JSON.parse(JSON.stringify(winSize));
+            // minMax = JSON.parse(JSON.stringify(winSize));
+            minMax = Object.assign(minMax, winSize);
             minMax.maxX = window.innerWidth - w.value;
             minMax.maxY = window.innerHeight - systemBarDom.height - h.value;
             mouseMove.mousedown({e, x, y, cursor});
         }
         const topMouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
-            minMax = JSON.parse(JSON.stringify(winSize));
+            // minMax = JSON.parse(JSON.stringify(winSize));
+            minMax = Object.assign(minMax, winSize);
             minMax.maxY = y.value + h.value - minMax.minH;
             minMax.maxH = y.value + h.value;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'top'});
         }
         const leftMouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
-            minMax = JSON.parse(JSON.stringify(winSize));
+            // minMax = JSON.parse(JSON.stringify(winSize));
+            minMax = Object.assign(minMax, winSize);
             minMax.maxX = x.value + w.value - minMax.minW;
             //右侧app列的宽度要减去
             minMax.maxW = x.value + w.value - appsDom.width;
@@ -62,19 +66,22 @@ export default defineComponent({
         }
         const rightMouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
-            minMax = JSON.parse(JSON.stringify(winSize));
+            // minMax = JSON.parse(JSON.stringify(winSize));
+            minMax = Object.assign(minMax, winSize);
             minMax.maxW = window.innerWidth - x.value;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'right'});
         }
         const bottomMouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
-            minMax = JSON.parse(JSON.stringify(winSize));
+            // minMax = JSON.parse(JSON.stringify(winSize));
+            minMax = Object.assign(minMax, winSize);
             minMax.maxH = window.innerHeight - y.value - systemBarDom.height;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'bottom'});
         }
         const leftTopMouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
-            minMax = JSON.parse(JSON.stringify(winSize));
+            // minMax = JSON.parse(JSON.stringify(winSize));
+            minMax = Object.assign(minMax, winSize);
             minMax.maxX = x.value + w.value - minMax.minW;
             minMax.maxW = x.value + w.value - appsDom.width;
             minMax.maxY = y.value + h.value - minMax.minH;
@@ -83,7 +90,8 @@ export default defineComponent({
         }
         const rightTopMouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
-            minMax = JSON.parse(JSON.stringify(winSize));
+            // minMax = JSON.parse(JSON.stringify(winSize));
+            minMax = Object.assign(minMax, winSize);
             minMax.maxW = window.innerWidth - x.value;
             minMax.maxY = y.value + h.value - minMax.minH;
             minMax.maxH = y.value + h.value;
@@ -91,7 +99,8 @@ export default defineComponent({
         }
         const leftBottomMouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
-            minMax = JSON.parse(JSON.stringify(winSize));
+            // minMax = JSON.parse(JSON.stringify(winSize));
+            minMax = Object.assign(minMax, winSize);
             minMax.maxX = x.value + w.value - minMax.minW;
             minMax.maxW = x.value + w.value - appsDom.width;
             minMax.maxH = window.innerHeight - y.value - systemBarDom.height;
@@ -99,7 +108,8 @@ export default defineComponent({
         }
         const rightBottomMouseDownFn = (e: MouseEvent) => {
             mouseDownWinId.value = props.id;
-            minMax = JSON.parse(JSON.stringify(winSize));
+            // minMax = JSON.parse(JSON.stringify(winSize));
+            minMax = Object.assign(minMax, winSize);
             minMax.maxW = window.innerWidth - x.value;
             minMax.maxH = window.innerHeight - y.value - systemBarDom.height;
             mouseMove.mousedown({e, x, y, cursor, w, h, type: 'rightBottom'});
@@ -124,41 +134,6 @@ export default defineComponent({
             }
         }
 
-        //是否显示快速放到到半屏窗口辅助显示框
-        const showDockingEdge = (x: Ref<number>, y: Ref<number>, dir: string) => {
-            if (cursor.value !== 'move' || !dockingEdge) {
-                return;
-            }
-            const xVal = x.value;
-            const yVal = y.value;
-            const {minX, maxX, minY, maxY} = minMax;
-
-            if (xVal > minX && xVal < maxX && yVal > minY && yVal < maxY) {
-                dockingEdge.hide();
-                return;
-            }
-
-            if (xVal <= minX && dir === 'left') {
-                dockingEdge.showLeft();
-                return;
-            }
-
-            if (xVal >= maxX && dir === 'right') {
-                dockingEdge.showRight();
-                return;
-            }
-
-            if (yVal <= minY && dir === 'top') {
-                dockingEdge.showTop();
-                return;
-            }
-            if (yVal >= maxY && dir === 'bottom') {
-                dockingEdge.showBottom();
-                return;
-            }
-
-            dockingEdge.hide();
-        }
 
         const changeWinSize = (type: string) => {
             dockingEdge.hide();
@@ -203,48 +178,16 @@ export default defineComponent({
             }, 10)
         }
 
-        const dirTemp: any = [];
-        const getMouseDir = (newVal: any, oldVal: any) => {
-            const newX = newVal[0];
-            const newY = newVal[1];
-            const oldX = oldVal[0];
-            const oldY = oldVal[1];
-            const mx = (newX - oldX);
-            const my = (newY - oldY);
-
-            if (Math.abs(mx) > Math.abs(my)) {
-                if (newX > oldX) {
-                    dirTemp.push('right');
-                } else {
-                    dirTemp.push('left');
-                }
-            } else {
-                if (newY > oldY) {
-                    dirTemp.push('bottom');
-                } else {
-                    dirTemp.push('top');
-                }
-            }
-
-            if (dirTemp.length > 5) {
-                dirTemp.shift()
-            }
-
-            //从5次触发中取最多的返回
-            return getArrayRepeatItem(dirTemp);
-        }
-
 
         const {minFn, maxFn, closeFn, recoverFn} = rightBtnClick(props.id, el);
         const {chooseFn} = activeFn(props.id, el);
+        dockingEdgeFn(props.id, minMax);
 
         //拖动监听
         watch([x, y, w, h], (newVal, oldValue) => {
             if (cursor.value === 'default') {
                 return;
             }
-            const dir = getMouseDir(newVal, oldValue);
-            showDockingEdge(x, y, dir);
             const {newX, newY, newW, newH} = checkXY(x, y, w, h);
             const dom = el.value! as HTMLElement;
             dom.style.left = newX + 'px';

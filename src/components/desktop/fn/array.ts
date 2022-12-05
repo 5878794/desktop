@@ -1,5 +1,5 @@
 //获取数组中出现次数最多的元素(字符或数字)
-const getArrayRepeatItem = (arr: string[] | number[]) => {
+const getArrayRepeatMaxItem = (arr: string[] | number[]) => {
     const temp: any = {};
     arr.map((item) => {
         const key = item.toString();
@@ -23,5 +23,5 @@ const getArrayRepeatItem = (arr: string[] | number[]) => {
 
 
 export {
-    getArrayRepeatItem
+    getArrayRepeatMaxItem
 }
