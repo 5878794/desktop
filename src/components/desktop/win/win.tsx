@@ -18,6 +18,7 @@ export default defineComponent({
     },
     setup(props, {expose}) {
         const appInfo = getOpenedWinInfo(props.id);
+        console.log(appInfo)
         const el = ref(null);
         const minMax: any = {};
 

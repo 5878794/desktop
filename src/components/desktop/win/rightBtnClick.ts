@@ -1,5 +1,5 @@
 //右上角按钮  最小化、最大化、恢复、关闭窗口
-import {appsDom, closeWin, getOpenedWinInfo, systemBarDom} from "@/components/desktop/cache";
+import {appsDom, closeWin, autoChoose, getOpenedWinInfo, systemBarDom} from "@/components/desktop/cache";
 import {Ref, watch} from 'vue';
 
 export default function (id: string, el: Ref) {
@@ -20,6 +20,7 @@ export default function (id: string, el: Ref) {
 
     const minFn = () => {
         isShow.value = false;
+        autoChoose();
     }
     let recoverCache: any = {};
     const maxFn = () => {
@@ -44,6 +45,7 @@ export default function (id: string, el: Ref) {
     }
     const closeFn = () => {
         closeWin(id);
+        autoChoose();
     }
     const recoverFn = () => {
         w.value = recoverCache.w;

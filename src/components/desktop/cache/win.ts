@@ -60,6 +60,22 @@ const closeWin = (id: string) => {
     delete cacheData[id];
 }
 
+//自动选中层级最高的窗口
+const autoChoose = () => {
+    let z = 0, chooseId = '';
+    openedWin.value.map((id: string) => {
+        const app = cacheData[id] || {};
+        const appZ = app.z.value || 0;
+        if (appZ > z) {
+            z = appZ;
+            chooseId = id;
+        }
+    })
+    if (chooseId) {
+        chooseWin(chooseId);
+    }
+}
+
 
 export {
     openedWin,
@@ -68,5 +84,6 @@ export {
     cursor,
     mouseDownWinId,
     getOpenedWinInfo,
-    chooseWin
+    chooseWin,
+    autoChoose
 }
