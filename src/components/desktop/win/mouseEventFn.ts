@@ -120,7 +120,9 @@ export default function (id: string, minMax: any, el: Ref) {
     watch(cursor, (newVal: string, oldVal: string) => {
         if (id === mouseDownWinId.value && newVal === 'default') {
             //是当前dom 释放时
-            if (!(oldVal === 'move' && dockingEdgeState.value !== 'hide')) {
+            if (oldVal === 'move' && dockingEdgeState.value !== 'hide') {
+                //
+            } else {
                 //普通保存位置信息等
                 const {newX, newY, newW, newH} = checkXY(x, y, w, h);
                 x.value = newX;

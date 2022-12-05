@@ -22,6 +22,9 @@ export default defineComponent({
         const minMax: any = {};
 
 
+        const {minFn, maxFn, closeFn, recoverFn} = rightBtnClick(props.id, el);
+        const {chooseFn} = activeFn(props.id, el);
+        dockingEdgeFn(props.id, minMax, el);
         const {
             mouseDownFn,
             topMouseDownFn,
@@ -33,9 +36,6 @@ export default defineComponent({
             leftBottomMouseDownFn,
             rightBottomMouseDownFn
         } = mouseEventFn(props.id, minMax, el);
-        const {minFn, maxFn, closeFn, recoverFn} = rightBtnClick(props.id, el);
-        const {chooseFn} = activeFn(props.id, el);
-        dockingEdgeFn(props.id, minMax, el);
 
 
         expose({})
