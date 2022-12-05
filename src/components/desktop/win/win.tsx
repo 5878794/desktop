@@ -48,6 +48,7 @@ export default defineComponent({
                 const props = appInfo.props;
                 const app = createApp(tag, props);
                 app.provide('destroy', () => {
+                    app.unmount();
                     console.log('close to do');
                 })
                 app.mount('#' + winContainerId);
