@@ -1,5 +1,5 @@
 //打开的窗口
-import {createApp, defineComponent, nextTick, onMounted, ref} from "vue";
+import {createApp, defineComponent, onMounted, ref} from "vue";
 import {getOpenedWinInfo} from "@/components/desktop/cache/index";
 import icon from '@/components/desktop/publishCom/icon';
 
