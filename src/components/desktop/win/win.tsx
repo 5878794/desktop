@@ -60,6 +60,17 @@ export default defineComponent({
         }
     },
     render() {
+        const readerApp = () => {
+            if (this.appInfo.url) {
+                return <iframe class={[desktopStyle.iframe]} src={this.appInfo.url}></iframe>
+            } else {
+                const tag = this.appInfo.com;
+                const props = this.appInfo.props;
+                return <tag {...props} />
+            }
+        }
+
+
         return <div ref='el' class={[desktopStyle.win, boxStyle.box_slt]}>
             <div onMousedown={this.mouseDownFn} class={[desktopStyle.win_top, boxStyle.box_hlc]}>
                 <div class={[desktopStyle.win_top_left, boxStyle.box_hlc]}>
@@ -78,12 +89,7 @@ export default defineComponent({
                 </div>
             </div>
             <div class={[boxStyle.boxflex1, desktopStyle.win_main]}>
-                <div style='width:200%;height:20px;background:red;'>{new Date().getTime()}</div>
-                {this.appInfo.name}asdfasdfjaskdhfkjashdfkjhasdfhasjkdhfsahdf阿斯顿交付海军阿克苏的和佛教阿山东分局喀什地方哈桑的发挥
-                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                123
+                {readerApp()}
             </div>
             <div onMousedown={this.topMouseDownFn} class={desktopStyle.top_scale}></div>
             <div onMousedown={this.leftMouseDownFn} class={desktopStyle.left_scale}></div>
